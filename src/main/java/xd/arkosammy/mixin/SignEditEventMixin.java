@@ -7,6 +7,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.filter.FilteredMessage;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -43,13 +44,14 @@ public abstract class SignEditEventMixin extends BlockEntity {
 		SignEditText originalText = new SignEditText(originalTextAsSignText);
 		SignEditText  newText = new SignEditText(messages);
 		RegistryKey<World> worldRegistryKey = this.getWorld().getRegistryKey();
+		MinecraftServer server = this.getWorld().getServer();
 
 		if(originalText.equals(newText)){
 			return;
 		}
 
 		SignEditEvent signEditEvent = new SignEditEvent(player, blockPos, worldRegistryKey, originalText, newText, now, front);
-		SignEditCallback.SIGN_EDIT.invoker().onSignEditedCallback(signEditEvent);
+		SignEditCallback.SIGN_EDIT.invoker().onSignEditedCallback(signEditEvent, server);
 
 	}
 

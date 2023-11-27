@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<World> worldRegistryKey, SignEditText originalText, SignEditText newText, LocalDateTime timestamp, boolean isFrontSide) {
 
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy, hh:mm:ss a");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy, hh:mm:ss a");
 
     private String getWorldRegistryKeyAsAltString() {
 
@@ -30,14 +30,14 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
 
     }
 
-    private String getBlockPosAsAltString() {
+    public String getBlockPosAsAltString() {
         return String.format("{%d, %d, %d}", this.blockPos().getX(), this.blockPos().getY(), this.blockPos().getZ());
     }
 
     @Override
     public String toString() {
         return String.format("[%s] %s edited the %s-side text of a sign at %s in the %s, from %s, to %s",
-                dtf.format(this.timestamp()),
+                DTF.format(this.timestamp()),
                 this.author().getDisplayName().getString(),
                 this.isFrontSide() ? "front" : "back",
                 this.getBlockPosAsAltString(),

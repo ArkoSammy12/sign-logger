@@ -15,6 +15,8 @@ import java.nio.file.Path;
 
 public final class Config {
 
+    //TODO: FINALIZE CONFIG SYSTEM
+
     private Config(){}
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("sign-logger.toml");
     @Nullable
