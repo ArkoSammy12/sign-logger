@@ -45,8 +45,12 @@ dependencies {
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 
 	// Night Config
-	include(modImplementation "com.electronwill.night-config:core:3.6.7")
-	include(modImplementation "com.electronwill.night-config:toml:3.6.7")
+	include(implementation "com.electronwill.night-config:core:3.6.7")
+	include(implementation "com.electronwill.night-config:toml:3.6.7")
+
+	//Java Database Connectivity API
+	include(implementation "org.xerial:sqlite-jdbc:3.44.0.0")
+
 
 	//Mixin extras
 	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0-rc.4")))
