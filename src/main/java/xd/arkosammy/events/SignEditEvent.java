@@ -13,13 +13,13 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
 
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy, hh:mm:ss a");
 
-    private String getWorldRegistryKeyAsAltString() {
+    public static String getWorldRegistryKeyAsAltString(RegistryKey<World> worldRegistryKey) {
 
-        if (this.worldRegistryKey() == null) {
+        if (worldRegistryKey == null) {
             return "NO WORLD";
         }
 
-        String worldString = this.worldRegistryKey().toString();
+        String worldString = worldRegistryKey.toString();
         int colonCharIndex = worldString.lastIndexOf(':');
 
         if (colonCharIndex != -1) {
@@ -30,8 +30,18 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
 
     }
 
-    public String getBlockPosAsAltString() {
-        return String.format("{%d, %d, %d}", this.blockPos().getX(), this.blockPos().getY(), this.blockPos().getZ());
+    public static String getWorldRegistryKeyAsAltString(String worldRegistryKey) {
+
+        int colonCharIndex = worldRegistryKey.lastIndexOf(':');
+        if (colonCharIndex != -1) {
+            worldRegistryKey = worldRegistryKey.substring(colonCharIndex + 1, worldRegistryKey.length() - 1);
+        }
+        return worldRegistryKey;
+
+    }
+
+    public static String getBlockPosAsAltString(BlockPos pos) {
+        return String.format("{%d, %d, %d}", pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override
@@ -40,8 +50,8 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
                 DTF.format(this.timestamp()),
                 this.author().getDisplayName().getString(),
                 this.isFrontSide() ? "front" : "back",
-                this.getBlockPosAsAltString(),
-                this.getWorldRegistryKeyAsAltString(),
+                getBlockPosAsAltString(this.blockPos),
+                getWorldRegistryKeyAsAltString(this.worldRegistryKey),
                 this.originalText().toString(),
                 this.newText().toString());
     }
@@ -57,4 +67,5 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
     public int hashCode() {
         return Objects.hash(author, blockPos, originalText, newText, timestamp, isFrontSide);
     }
+
 }

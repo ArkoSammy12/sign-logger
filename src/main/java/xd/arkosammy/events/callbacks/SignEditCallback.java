@@ -1,14 +1,15 @@
-package xd.arkosammy.events;
+package xd.arkosammy.events.callbacks;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
+import xd.arkosammy.events.SignEditEvent;
 
 
 public interface SignEditCallback {
 
-    Event<SignEditCallback> SIGN_EDIT = EventFactory.createArrayBacked(SignEditCallback.class,
+    Event<SignEditCallback> EVENT = EventFactory.createArrayBacked(SignEditCallback.class,
             (listeners) -> ((signEditEvent, server) -> {
                 for(SignEditCallback listener : listeners){
                     ActionResult result = listener.onSignEditedCallback(signEditEvent, server);

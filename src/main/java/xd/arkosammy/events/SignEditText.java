@@ -26,6 +26,11 @@ public class SignEditText {
         }
     }
 
+    public SignEditText(String[] messages){
+        System.arraycopy(messages, 0, textLines, 0, 4);
+    }
+
+
     public String[] getTextLines(){
         return this.textLines;
     }

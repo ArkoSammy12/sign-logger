@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xd.arkosammy.events.SignEditCallback;
+import xd.arkosammy.events.callbacks.SignEditCallback;
 import xd.arkosammy.events.SignEditEvent;
 import xd.arkosammy.events.SignEditText;
 
@@ -51,7 +51,7 @@ public abstract class SignEditEventMixin extends BlockEntity {
 		}
 
 		SignEditEvent signEditEvent = new SignEditEvent(player, blockPos, worldRegistryKey, originalText, newText, now, front);
-		SignEditCallback.SIGN_EDIT.invoker().onSignEditedCallback(signEditEvent, server);
+		SignEditCallback.EVENT.invoker().onSignEditedCallback(signEditEvent, server);
 
 	}
 
