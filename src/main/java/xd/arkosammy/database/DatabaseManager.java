@@ -87,7 +87,6 @@ public abstract class DatabaseManager {
     public static Optional<List<SignEditEventResult>> queryFromBlockPos(BlockPos blockPos, MinecraftServer server){
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
-
         String blockPosAsString = SignEditEvent.getBlockPosAsAltString(blockPos);
 
         try (Connection connection = DriverManager.getConnection(url);

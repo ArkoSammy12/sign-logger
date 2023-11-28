@@ -3,7 +3,8 @@
   "package": "xd.arkosammy.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AbstractBlockMixin",
+    "BlockBreakStartMixin",
+    "BlockPlaceMixin",
     "ServerPlayerEntityMixin",
     "SignEditEventMixin"
   ],

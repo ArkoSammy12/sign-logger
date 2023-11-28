@@ -12,16 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xd.arkosammy.events.callbacks.BlockBreakStartCallback;
 
 @Mixin(targets = "net.minecraft.block.AbstractBlock$AbstractBlockState")
-public abstract class AbstractBlockMixin {
+public abstract class BlockBreakStartMixin {
 
     @Shadow protected abstract BlockState asBlockState();
 
     @Inject(method = "onBlockBreakStart", at = @At("HEAD"))
     private void onBlockBreakStart(World world, BlockPos pos, PlayerEntity player, CallbackInfo ci){
-
         BlockBreakStartCallback.EVENT.invoker().onBlockBreakStartCallback(world, pos, this.asBlockState(), player);
-
-
     }
 
 }

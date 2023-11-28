@@ -4,8 +4,9 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,15 @@ import xd.arkosammy.commands.SignLoggerCommandManager;
 import xd.arkosammy.database.DatabaseManager;
 import xd.arkosammy.events.callbacks.BlockBreakStartCallback;
 import xd.arkosammy.events.InspectionModeInterface;
+import xd.arkosammy.events.callbacks.BlockPlacedCallback;
 import xd.arkosammy.events.callbacks.SignEditCallback;
-import xd.arkosammy.events.SignEditEventResult;
+import xd.arkosammy.util.InspectMode;
 
-import java.util.List;
-import java.util.Optional;
-
+//TODO: HANDLE NPE WARNINGS
+//TODO: CREATE CONFIG
+//TODO: FORMAT CHAT QUERY RESULTS
+//TODO: RESET INSPECT MODE STATUS UPON LEAVING SERVER
+//TODO: GIVE PLAYER ITEM BACK AFTER PLACING BLOCK IN INSPECT MODE
 public class SignLogger implements DedicatedServerModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("sign-logger");
 
@@ -34,29 +38,31 @@ public class SignLogger implements DedicatedServerModInitializer {
 		ServerLifecycleEvents.SERVER_STARTING.register(SignLogger::onServerStarting);
 		ServerLifecycleEvents.SERVER_STOPPING.register(SignLogger::onServerStopping);
 		CommandRegistrationCallback.EVENT.register(SignLoggerCommandManager::registerCommands);
-		PlayerBlockBreakEvents.BEFORE.register(((world, player, pos, state, blockEntity) -> !((InspectionModeInterface) player).sign_logger$isInspecting()));
-		BlockBreakStartCallback.EVENT.register(((world, pos, state, playerEntity) -> {
-
-			if(((InspectionModeInterface)playerEntity).sign_logger$isInspecting()){
-
-				Optional<List<SignEditEventResult>> signEditEventResultListOptional = DatabaseManager.queryFromBlockPos(pos, world.getServer());
-				if(signEditEventResultListOptional.isEmpty()){
-					return ActionResult.PASS;
-				}
-				List<SignEditEventResult> signEditEventResults = signEditEventResultListOptional.get();
-				if(signEditEventResults.isEmpty()){
-					return ActionResult.PASS;
-				}
-
-				for(SignEditEventResult signEditEventResult : signEditEventResults){
-					playerEntity.sendMessage(Text.literal(signEditEventResult.toString()));
-				}
-				return ActionResult.PASS;
+		PlayerBlockBreakEvents.BEFORE.register(((world, player, pos, state, blockEntity) -> {
+			if(!((InspectionModeInterface) player).sign_logger$isInspecting()){
+				return true;
 			}
-
-			return ActionResult.PASS;
-
+			if(player.isCreative()){
+				InspectMode.handleInspectModeQuery(player, pos, world);
+			}
+			return false;
 		}));
+		BlockBreakStartCallback.EVENT.register(((world, pos, state, playerEntity) -> {
+			if(((InspectionModeInterface)playerEntity).sign_logger$isInspecting()){
+				InspectMode.handleInspectModeQuery(playerEntity, pos, world);
+			}
+			return ActionResult.PASS;
+		}));
+
+		BlockPlacedCallback.EVENT.register((itemPlacementContext) -> {
+			ActionResult result = ActionResult.PASS;
+			PlayerEntity playerEntity = itemPlacementContext.getPlayer();
+			if(playerEntity instanceof ServerPlayerEntity serverPlayerEntity &&  ((InspectionModeInterface)serverPlayerEntity).sign_logger$isInspecting()) {
+				InspectMode.handleInspectModeQuery(serverPlayerEntity, itemPlacementContext.getBlockPos(), itemPlacementContext.getWorld());
+				result = ActionResult.FAIL;
+			}
+			return result;
+		});
 
 	}
 
