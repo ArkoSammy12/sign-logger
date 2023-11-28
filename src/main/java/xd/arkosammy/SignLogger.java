@@ -2,8 +2,10 @@ package xd.arkosammy;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,8 +23,7 @@ import xd.arkosammy.util.InspectMode;
 //TODO: HANDLE NPE WARNINGS
 //TODO: CREATE CONFIG
 //TODO: FORMAT CHAT QUERY RESULTS
-//TODO: RESET INSPECT MODE STATUS UPON LEAVING SERVER
-//TODO: GIVE PLAYER ITEM BACK AFTER PLACING BLOCK IN INSPECT MODE
+//TODO: IMPLEMENT DATABASE PURGE
 public class SignLogger implements DedicatedServerModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("sign-logger");
 
@@ -63,6 +64,17 @@ public class SignLogger implements DedicatedServerModInitializer {
 			}
 			return result;
 		});
+
+
+		ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
+			((InspectionModeInterface)handler.getPlayer()).sign_logger$setIsInspecting(false);
+		}));
+
+		ServerLivingEntityEvents.AFTER_DEATH.register(((entity, damageSource) -> {
+			if(entity instanceof ServerPlayerEntity serverPlayerEntity){
+				((InspectionModeInterface)serverPlayerEntity).sign_logger$setIsInspecting(false);
+			}
+		}));
 
 	}
 

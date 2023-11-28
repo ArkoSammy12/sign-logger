@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xd.arkosammy.events.callbacks.BlockPlacedCallback;
 
 @Mixin(BlockItem.class)
-public class BlockPlaceMixin {
+public abstract class BlockPlaceMixin {
 
     @Inject(method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;", at = @At("HEAD"), cancellable = true)
     private void onBlockPlaced(ItemPlacementContext context, CallbackInfoReturnable<ActionResult> cir){
