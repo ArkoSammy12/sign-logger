@@ -1,4 +1,4 @@
-[# Sign Logger
+# Sign Logger
 This simple server side mod allows for the tracking of sign editions in the world. It can log these events to the server's console, as well as store them to a database. The mod features an inspection mode to quickly see the sign=edit logs associated with a specific coordinate.
 
 ## Features
