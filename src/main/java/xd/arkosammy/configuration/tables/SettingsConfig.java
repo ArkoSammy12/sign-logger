@@ -6,13 +6,13 @@ import xd.arkosammy.configuration.ConfigEntry;
 
 import java.util.Arrays;
 
-public enum PreferencesConfig {
+public enum SettingsConfig {
     DO_CONSOLE_LOGGING(new ConfigEntry<>("do_console_logging", true, """
             (Default = true) Toggle the logging of sign edit instances in the console."""));
 
     private final ConfigEntry<Boolean> entry;
 
-    PreferencesConfig(ConfigEntry<Boolean> entry){
+    SettingsConfig(ConfigEntry<Boolean> entry){
         this.entry = entry;
     }
 
@@ -20,13 +20,13 @@ public enum PreferencesConfig {
         return this.entry;
     }
 
-    private static final String TABLE_NAME = "preferences";
+    private static final String TABLE_NAME = "settings";
     private static final String TABLE_COMMENT = """
             Toggleable settings to customize the behaviour of the mod.""";
 
     public static void saveToFileWithDefaultValues(CommentedFileConfig fileConfig){
 
-        for(ConfigEntry<Boolean> configEntry : Arrays.stream(PreferencesConfig.values()).map(PreferencesConfig::getEntry).toList()){
+        for(ConfigEntry<Boolean> configEntry : Arrays.stream(SettingsConfig.values()).map(SettingsConfig::getEntry).toList()){
             configEntry.resetValue();
         }
 
@@ -35,7 +35,7 @@ public enum PreferencesConfig {
     }
 
     public static void saveSettingsToFile(CommentedFileConfig fileConfig){
-        for(ConfigEntry<Boolean> entry : Arrays.stream(PreferencesConfig.values()).map(PreferencesConfig::getEntry).toList()){
+        for(ConfigEntry<Boolean> entry : Arrays.stream(SettingsConfig.values()).map(SettingsConfig::getEntry).toList()){
             fileConfig.set(TABLE_NAME + "." + entry.getName(), entry.getValue());
             String entryComment = entry.getComment();
             if(entryComment != null) fileConfig.setComment(TABLE_NAME + "." + entry.getName(), entryComment);
@@ -44,7 +44,7 @@ public enum PreferencesConfig {
     }
 
     public static void loadSettingsToMemory(CommentedFileConfig fileConfig){
-        for(ConfigEntry<Boolean> configEntry : Arrays.stream(PreferencesConfig.values()).map(PreferencesConfig::getEntry).toList()){
+        for(ConfigEntry<Boolean> configEntry : Arrays.stream(SettingsConfig.values()).map(SettingsConfig::getEntry).toList()){
             Object value = fileConfig.getOrElse(TABLE_NAME + "." + configEntry.getName(), configEntry.getDefaultValue());
             if(value instanceof Boolean boolValue){
                 configEntry.setValue(boolValue);

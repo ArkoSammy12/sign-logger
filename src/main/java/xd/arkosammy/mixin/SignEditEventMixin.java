@@ -50,7 +50,6 @@ public abstract class SignEditEventMixin extends BlockEntity {
 		if(originalText.equals(newText)){
 			return;
 		}
-
 		SignEditEvent signEditEvent = new SignEditEvent(player, blockPos, worldRegistryKey, originalText, newText, now, front);
 		SignEditCallback.EVENT.invoker().onSignEditedCallback(signEditEvent, server);
 

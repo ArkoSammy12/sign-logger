@@ -68,7 +68,7 @@ public abstract class DatabaseCommands {
             ctx.getSource().sendMessage(Text.literal("Cannot set \"purge_older_than_x_days\" setting to 0 or lower").formatted(Formatting.RED));
         } else {
             DatabaseConfig.PURGE_LOGS_OLDER_THAN_X_AMOUNT.getEntry().setValue(purgeOlderThanXDays);
-            ctx.getSource().sendMessage(Text.literal("\"purge_older_than_x_days\" setting has been set to: " + purgeOlderThanXDays).formatted(Formatting.RED));
+            ctx.getSource().sendMessage(Text.literal("\"purge_older_than_x_days\" setting has been set to: " + purgeOlderThanXDays));
 
         }
         return Command.SINGLE_SUCCESS;

@@ -10,16 +10,16 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
 import xd.arkosammy.SignLogger;
 import xd.arkosammy.configuration.tables.DatabaseConfig;
-import xd.arkosammy.configuration.tables.PreferencesConfig;
+import xd.arkosammy.configuration.tables.SettingsConfig;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public final class Config {
+public final class SignLoggerConfig {
 
-    private Config(){}
+    private SignLoggerConfig(){}
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("sign-logger.toml");
     @Nullable
     private static final GenericBuilder<CommentedConfig, CommentedFileConfig> CONFIG_BUILDER;
@@ -97,17 +97,17 @@ public final class Config {
     }
 
     private static void saveDefaultConfigSettingsToFile(CommentedFileConfig fileConfig){
-        PreferencesConfig.saveToFileWithDefaultValues(fileConfig);
+        SettingsConfig.saveToFileWithDefaultValues(fileConfig);
         DatabaseConfig.saveToFileWithDefaultValues(fileConfig);
     }
 
     private static void saveConfigSettingsToFile(CommentedFileConfig fileConfig){
-        PreferencesConfig.saveSettingsToFile(fileConfig);
+        SettingsConfig.saveSettingsToFile(fileConfig);
         DatabaseConfig.saveSettingsToFile(fileConfig);
     }
 
     private static void loadConfigSettingsToMemory(CommentedFileConfig fileConfig){
-        PreferencesConfig.loadSettingsToMemory(fileConfig);
+        SettingsConfig.loadSettingsToMemory(fileConfig);
         DatabaseConfig.loadSettingsToMemory(fileConfig);
     }
 

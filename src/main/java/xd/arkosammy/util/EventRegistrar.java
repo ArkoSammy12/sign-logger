@@ -12,7 +12,7 @@ import net.minecraft.util.ActionResult;
 import xd.arkosammy.SignLogger;
 import xd.arkosammy.commands.SignLoggerCommandManager;
 import xd.arkosammy.configuration.tables.DatabaseConfig;
-import xd.arkosammy.configuration.tables.PreferencesConfig;
+import xd.arkosammy.configuration.tables.SettingsConfig;
 import xd.arkosammy.events.InspectionModeInterface;
 import xd.arkosammy.events.callbacks.BlockBreakStartCallback;
 import xd.arkosammy.events.callbacks.BlockPlacedCallback;
@@ -35,7 +35,7 @@ public abstract class EventRegistrar {
 
     private static void registerSignEditEvent() {
         SignEditCallback.EVENT.register((signEditEvent, server) -> {
-            if(PreferencesConfig.DO_CONSOLE_LOGGING.getEntry().getValue()) {
+            if(SettingsConfig.DO_CONSOLE_LOGGING.getEntry().getValue()) {
                 SignLogger.LOGGER.info(signEditEvent.toString());
             }
             DatabaseManager.storeSignEditEvent(signEditEvent, server);
