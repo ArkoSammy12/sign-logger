@@ -22,7 +22,7 @@ public enum DatabaseConfig {
         return this.entry;
     }
 
-    private static final String TABLE_NAME = "delays";
+    private static final String TABLE_NAME = "database";
     private static final String TABLE_COMMENT = """
             Settings related to the behaviour of the database.""";
 
