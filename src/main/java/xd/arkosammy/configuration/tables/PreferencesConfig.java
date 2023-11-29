@@ -20,7 +20,7 @@ public enum PreferencesConfig {
         return this.entry;
     }
 
-    private static final String TABLE_NAME = "preferences";
+    private static final String TABLE_NAME = "database";
     private static final String TABLE_COMMENT = """
             Toggleable settings to customize the behaviour of the mod.""";
 
