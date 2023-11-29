@@ -22,6 +22,7 @@ import xd.arkosammy.events.SignEditText;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(SignBlockEntity.class)
 public abstract class SignEditEventMixin extends BlockEntity {
@@ -43,7 +44,7 @@ public abstract class SignEditEventMixin extends BlockEntity {
 		LocalDateTime now = LocalDateTime.now();
 		SignEditText originalText = new SignEditText(originalTextAsSignText);
 		SignEditText  newText = new SignEditText(messages);
-		RegistryKey<World> worldRegistryKey = this.getWorld().getRegistryKey();
+		RegistryKey<World> worldRegistryKey = Objects.requireNonNull(this.getWorld()).getRegistryKey();
 		MinecraftServer server = this.getWorld().getServer();
 
 		if(originalText.equals(newText)){

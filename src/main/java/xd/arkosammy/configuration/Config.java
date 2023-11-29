@@ -1,4 +1,4 @@
-package xd.arkosammy.config;
+package xd.arkosammy.configuration;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
@@ -44,7 +44,7 @@ public final class Config {
             try(CommentedFileConfig fileConfig = CONFIG_BUILDER.build()){
                 if (!Files.exists(CONFIG_PATH)) {
                     SignLogger.LOGGER.warn("Found no preexisting config to load settings from. Creating a new config with default values in " + CONFIG_PATH);
-                    SignLogger.LOGGER.warn("Change the settings in the config file, then reload the config by using /sign-logger settings reload, or restart the server.");
+                    SignLogger.LOGGER.warn("Change the settings in the config file, then reload the config by using /sign-logger reload_config, or restart the server.");
                     saveDefaultConfigSettingsToFile(fileConfig);
                     fileConfig.save();
                 } else {
@@ -66,7 +66,7 @@ public final class Config {
                     fileConfig.save();
                 } else {
                     SignLogger.LOGGER.warn("Found no preexisting config to load settings from. Creating a new config with default values in " + CONFIG_PATH);
-                    SignLogger.LOGGER.warn("Change the settings in the config file, then reload the config by using /sign-logger settings reload, or restart the server.");
+                    SignLogger.LOGGER.warn("Change the settings in the config file, then reload the config by using /sign-logger reload_config, or restart the server.");
                     saveDefaultConfigSettingsToFile(fileConfig);
                     fileConfig.save();
                 }

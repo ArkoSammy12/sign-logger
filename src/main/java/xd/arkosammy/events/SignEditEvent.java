@@ -18,14 +18,12 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
         if (worldRegistryKey == null) {
             return "NO WORLD";
         }
-
         String worldString = worldRegistryKey.toString();
         int colonCharIndex = worldString.lastIndexOf(':');
 
         if (colonCharIndex != -1) {
             worldString = worldString.substring(colonCharIndex + 1, worldString.length() - 1);
         }
-
         return worldString;
 
     }
@@ -46,7 +44,7 @@ public record SignEditEvent(PlayerEntity author, BlockPos blockPos, RegistryKey<
 
     @Override
     public String toString() {
-        return String.format("[%s] %s edited the %s-side text of a sign at %s in the %s, from %s, to %s",
+        return String.format("[%s] %s edited the %s-side text of a sign at %s in %s, from %s, to %s",
                 DTF.format(this.timestamp()),
                 this.author().getDisplayName().getString(),
                 this.isFrontSide() ? "front" : "back",

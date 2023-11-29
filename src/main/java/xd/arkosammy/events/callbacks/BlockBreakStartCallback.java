@@ -4,9 +4,9 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public interface BlockBreakStartCallback {
 
@@ -21,6 +21,6 @@ public interface BlockBreakStartCallback {
                 return ActionResult.PASS;
             })));
 
-    ActionResult onBlockBreakStartCallback(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity);
+    ActionResult onBlockBreakStartCallback(ServerWorld world, BlockPos pos, BlockState state, PlayerEntity playerEntity);
 
 }

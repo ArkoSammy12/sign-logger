@@ -1,5 +1,7 @@
 package xd.arkosammy.events;
 
+import java.time.LocalDateTime;
+
 public class SignEditEventResult {
 
     private final String author;
@@ -7,7 +9,7 @@ public class SignEditEventResult {
     private final String worldRegistryKey;
     private final SignEditText originalText;
     private final SignEditText newText;
-    private final String timestamp;
+    private final LocalDateTime timestamp;
     private final boolean isFrontSide;
 
     private SignEditEventResult(Builder builder){
@@ -20,9 +22,37 @@ public class SignEditEventResult {
         this.isFrontSide = builder.isFrontSide;
     }
 
+    public String getAuthor(){
+        return this.author;
+    }
+
+    public String getBlockPos(){
+        return this.blockPos;
+    }
+
+    public String getWorldRegistryKey(){
+        return this.worldRegistryKey;
+    }
+
+    public SignEditText getOriginalText(){
+        return this.originalText;
+    }
+
+    public SignEditText getNewText(){
+        return this.newText;
+    }
+
+    public LocalDateTime getLocalDateTime(){
+        return this.timestamp;
+    }
+
+    public boolean isFrontSide(){
+        return this.isFrontSide;
+    }
+
     @Override
     public String toString(){
-        return String.format("[%s] %s edited the %s-side text of a sign at %s in the %s, from %s, to %s",
+        return String.format("[%s] %s edited the %s-side text of a sign at %s in %s, from %s, to %s",
                 this.timestamp,
                 this.author,
                 this.isFrontSide ? "front" : "back",
@@ -39,10 +69,10 @@ public class SignEditEventResult {
         private String worldRegistryKey = "NULL";
         private SignEditText originalText = new SignEditText(new String[]{"", "", "", ""});
         private SignEditText newText = new SignEditText(new String[]{"", "", "", ""});
-        private String timestamp = "NULL";
-        private boolean isFrontSide = true;
+        private final LocalDateTime timestamp;
+        private final boolean isFrontSide;
 
-        public Builder(String timestamp, boolean isFrontSide){
+        public Builder(LocalDateTime timestamp, boolean isFrontSide){
             this.timestamp = timestamp;
             this.isFrontSide = isFrontSide;
         }
@@ -57,7 +87,7 @@ public class SignEditEventResult {
             return this;
         }
 
-        public Builder withWorldRegistreyKey(String worldRegistryKey){
+        public Builder withWorldRegistryKey(String worldRegistryKey){
             this.worldRegistryKey = worldRegistryKey;
             return this;
         }

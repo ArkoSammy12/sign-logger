@@ -2,6 +2,7 @@ package xd.arkosammy.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +19,9 @@ public abstract class BlockBreakStartMixin {
 
     @Inject(method = "onBlockBreakStart", at = @At("HEAD"))
     private void onBlockBreakStart(World world, BlockPos pos, PlayerEntity player, CallbackInfo ci){
-        BlockBreakStartCallback.EVENT.invoker().onBlockBreakStartCallback(world, pos, this.asBlockState(), player);
+        if(world instanceof ServerWorld serverWorld) {
+            BlockBreakStartCallback.EVENT.invoker().onBlockBreakStartCallback(serverWorld, pos, this.asBlockState(), player);
+        }
     }
 
 }

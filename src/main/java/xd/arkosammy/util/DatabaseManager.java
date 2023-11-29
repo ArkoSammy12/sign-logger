@@ -1,4 +1,4 @@
-package xd.arkosammy.database;
+package xd.arkosammy.util;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
@@ -22,7 +22,6 @@ public abstract class DatabaseManager {
                 CREATE TABLE IF NOT EXISTS sign_edit_events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     author_name TEXT,
-                    author_uuid TEXT,
                     block_pos TEXT,
                     world_registry_key TEXT,
                     original_text_line_1 TEXT,
@@ -57,23 +56,22 @@ public abstract class DatabaseManager {
 
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO sign_edit_events (author_name, author_uuid, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                     "INSERT INTO sign_edit_events (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, signEditEvent.author().getDisplayName().getString());
-            preparedStatement.setString(2, signEditEvent.author().getUuid().toString());
-            preparedStatement.setString(3, SignEditEvent.getBlockPosAsAltString(signEditEvent.blockPos()));
-            preparedStatement.setString(4, signEditEvent.worldRegistryKey() != null ? signEditEvent.worldRegistryKey().toString() : "NULL");
-            preparedStatement.setString(5, signEditEvent.originalText().getTextLines()[0]);
-            preparedStatement.setString(6, signEditEvent.originalText().getTextLines()[1]);
-            preparedStatement.setString(7, signEditEvent.originalText().getTextLines()[2]);
-            preparedStatement.setString(8, signEditEvent.originalText().getTextLines()[3]);
-            preparedStatement.setString(9, signEditEvent.newText().getTextLines()[0]);
-            preparedStatement.setString(10, signEditEvent.newText().getTextLines()[1]);
-            preparedStatement.setString(11, signEditEvent.newText().getTextLines()[2]);
-            preparedStatement.setString(12, signEditEvent.newText().getTextLines()[3]);
-            preparedStatement.setTimestamp(13, Timestamp.valueOf(signEditEvent.timestamp()));
-            preparedStatement.setBoolean(14, signEditEvent.isFrontSide());
+            preparedStatement.setString(2, SignEditEvent.getBlockPosAsAltString(signEditEvent.blockPos()));
+            preparedStatement.setString(3, signEditEvent.worldRegistryKey() != null ? signEditEvent.worldRegistryKey().toString() : "NULL");
+            preparedStatement.setString(4, signEditEvent.originalText().getTextLines()[0]);
+            preparedStatement.setString(5, signEditEvent.originalText().getTextLines()[1]);
+            preparedStatement.setString(6, signEditEvent.originalText().getTextLines()[2]);
+            preparedStatement.setString(7, signEditEvent.originalText().getTextLines()[3]);
+            preparedStatement.setString(8, signEditEvent.newText().getTextLines()[0]);
+            preparedStatement.setString(9, signEditEvent.newText().getTextLines()[1]);
+            preparedStatement.setString(10, signEditEvent.newText().getTextLines()[2]);
+            preparedStatement.setString(11, signEditEvent.newText().getTextLines()[3]);
+            preparedStatement.setTimestamp(12, Timestamp.valueOf(signEditEvent.timestamp()));
+            preparedStatement.setBoolean(13, signEditEvent.isFrontSide());
 
             preparedStatement.executeUpdate();
 
@@ -119,10 +117,10 @@ public abstract class DatabaseManager {
                     newText[3] = resultSet.getString("new_text_line_4");
 
 
-                    String timestamp = resultSet.getTimestamp("timestamp").toLocalDateTime().format(SignEditEvent.DTF);
+                    LocalDateTime timestamp = resultSet.getTimestamp("timestamp").toLocalDateTime();
                     boolean isFrontSide = resultSet.getBoolean("is_front_side");
 
-                    SignEditEventResult signEditEventResult = new SignEditEventResult.Builder(timestamp, isFrontSide).withAuthor(author).withBlockPos(pos).withOriginalText(originalText).withNewText(newText).withWorldRegistreyKey(world).build();
+                    SignEditEventResult signEditEventResult = new SignEditEventResult.Builder(timestamp, isFrontSide).withAuthor(author).withBlockPos(pos).withOriginalText(originalText).withNewText(newText).withWorldRegistryKey(world).build();
                     signEditEventResults.add(signEditEventResult);
                 }
 
@@ -137,7 +135,28 @@ public abstract class DatabaseManager {
 
         return Optional.empty();
 
+    }
 
+    public static void purgeOldEntries(int daysThreshold, MinecraftServer server) {
+
+        String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM sign_edit_events WHERE timestamp < ?")) {
+
+            LocalDateTime thresholdDateTime = LocalDateTime.now().minusDays(daysThreshold);
+            Timestamp thresholdTimestamp = Timestamp.valueOf(thresholdDateTime);
+
+            preparedStatement.setTimestamp(1, thresholdTimestamp);
+
+            int deletedRows = preparedStatement.executeUpdate();
+
+            System.out.println("Purged " + deletedRows + " old sign edit event(s) from the database.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

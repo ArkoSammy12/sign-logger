@@ -2,6 +2,7 @@ package xd.arkosammy.mixin;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,9 +15,11 @@ public abstract class BlockPlaceMixin {
 
     @Inject(method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;", at = @At("HEAD"), cancellable = true)
     private void onBlockPlaced(ItemPlacementContext context, CallbackInfoReturnable<ActionResult> cir){
-        ActionResult result = BlockPlacedCallback.EVENT.invoker().onBlockPlacedCallback(context);
-        if(result == ActionResult.FAIL){
-            cir.setReturnValue(result);
+        if(context.getWorld() instanceof ServerWorld) {
+            ActionResult result = BlockPlacedCallback.EVENT.invoker().onBlockPlacedCallback(context);
+            if (result == ActionResult.FAIL) {
+                cir.setReturnValue(result);
+            }
         }
     }
 

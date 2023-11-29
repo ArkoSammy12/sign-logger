@@ -6,6 +6,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import xd.arkosammy.commands.categories.InspectModeToggle;
+import xd.arkosammy.commands.categories.PageCommands;
 
 public abstract class SignLoggerCommandManager {
 
@@ -16,12 +17,13 @@ public abstract class SignLoggerCommandManager {
     public static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment){
 
         LiteralCommandNode<ServerCommandSource> signLoggerNode = CommandManager
-                .literal("sign_logger")
+                .literal("sign-logger")
                 .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
                 .build();
 
         dispatcher.getRoot().addChild(signLoggerNode);
         InspectModeToggle.register(signLoggerNode);
+        PageCommands.register(signLoggerNode);
 
     }
 
