@@ -1,4 +1,4 @@
-# Sign Logger
+[# Sign Logger
 This simple server side mod allows for the tracking of sign editions in the world. It can log these events to the server's console, as well as store them to a database. The mod features an inspection mode to quickly see the sign=edit logs associated with a specific coordinate.
 
 ## Features
@@ -44,7 +44,7 @@ The following is the default configuration file generated upon first mod initial
 
 ## Support
 
-If you would like to report a bug, or make a suggestion, you can do so via the mod's [issue tracker]([https://github.com/ArkoSammy12/creeper-healing/issues](https://github.com/ArkoSammy12/sign-logger/issues)) or join my [Discord server](https://discord.gg/UKr8n3b3ze). 
+If you would like to report a bug, or make a suggestion, you can do so via the mod's [issue tracker]([https://github.com/ArkoSammy12/creeper-healing/issues](https://github.com/ArkoSammy12/sign-logger/issues)) or join my [Discord server](https://discord.gg/UKr8n3b3ze). ](https://discord.gg/BsgERe7egV)
 
 ## Building
 
