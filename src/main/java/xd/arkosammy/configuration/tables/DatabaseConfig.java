@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public enum DatabaseConfig {
 
-    PURGE_LOGS_OLDER_THAN_X_AMOUNT(new ConfigEntry<>("purge_logs_older_than_x_amount", 30, """
+    PURGE_LOGS_OLDER_THAN_X_AMOUNT(new ConfigEntry<>("purge_logs_older_than_x_days", 30, """
             (Default = 30) Configure the time in days that will be used to purge log entries older than the time specified.
             Cannot be set to a value lower than 1 or a decimal value."""));
 
