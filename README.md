@@ -14,7 +14,7 @@ Inspection mode will be automatically disabled upon dying or leaving the server.
 Whenever a player successfully edits the text of any sign, this event will be logged to the console and stored for future querying. This information includes:
 - The player who edited the sign.
 - The date of the editing.
-- Wwhether the text edited was on the front or back side of the sign.
+- Whether the text edited was on the front or back side of the sign.
 - The coordinates and the world where the sign was edited.
 - The text before and after the edition was made.
 
