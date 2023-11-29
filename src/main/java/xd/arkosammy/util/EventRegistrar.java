@@ -44,11 +44,11 @@ public abstract class EventRegistrar {
     }
 
     private static void registerServerLifecycleEvents() {
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            DatabaseManager.initDatabase(server);
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(DatabaseManager::initDatabase);
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-            DatabaseManager.purgeOldEntries(DatabaseConfig.PURGE_LOGS_OLDER_THAN_X_AMOUNT.getEntry().getValue(), server);
+            SignLogger.LOGGER.info("Initiating purge...");
+            int deletedRows = DatabaseManager.purgeOldEntries(DatabaseConfig.PURGE_LOGS_OLDER_THAN_X_AMOUNT.getEntry().getValue(), server);
+            SignLogger.LOGGER.info("Deleted " + deletedRows + " old sign-edit logs from the database");
         });
     }
 

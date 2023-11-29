@@ -137,9 +137,10 @@ public abstract class DatabaseManager {
 
     }
 
-    public static void purgeOldEntries(int daysThreshold, MinecraftServer server) {
+    public static int purgeOldEntries(int daysThreshold, MinecraftServer server) {
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
+        int deletedRows = 0;
 
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -149,14 +150,14 @@ public abstract class DatabaseManager {
             Timestamp thresholdTimestamp = Timestamp.valueOf(thresholdDateTime);
 
             preparedStatement.setTimestamp(1, thresholdTimestamp);
-
-            int deletedRows = preparedStatement.executeUpdate();
-
-            System.out.println("Purged " + deletedRows + " old sign edit event(s) from the database.");
+            deletedRows = preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return deletedRows;
+
     }
 
 }

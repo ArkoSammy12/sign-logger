@@ -57,7 +57,8 @@ public abstract class DatabaseCommands {
     private static int purgeCommand(CommandContext<ServerCommandSource> ctx){
 
         ctx.getSource().sendMessage(Text.literal("Initiating purge...").formatted(Formatting.AQUA));
-        DatabaseManager.purgeOldEntries(DatabaseConfig.PURGE_LOGS_OLDER_THAN_X_AMOUNT.getEntry().getValue(), ctx.getSource().getServer());
+        int deletedRows = DatabaseManager.purgeOldEntries(DatabaseConfig.PURGE_LOGS_OLDER_THAN_X_AMOUNT.getEntry().getValue(), ctx.getSource().getServer());
+        ctx.getSource().sendMessage(Text.literal("Deleted " + deletedRows + " old sign-edit logs from the database").formatted(Formatting.AQUA));
         return Command.SINGLE_SUCCESS;
 
     }
