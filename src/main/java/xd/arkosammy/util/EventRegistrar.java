@@ -11,6 +11,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import xd.arkosammy.SignLogger;
 import xd.arkosammy.commands.SignLoggerCommandManager;
+import xd.arkosammy.configuration.tables.DatabaseConfig;
+import xd.arkosammy.configuration.tables.PreferencesConfig;
 import xd.arkosammy.events.InspectionModeInterface;
 import xd.arkosammy.events.callbacks.BlockBreakStartCallback;
 import xd.arkosammy.events.callbacks.BlockPlacedCallback;
@@ -18,7 +20,7 @@ import xd.arkosammy.events.callbacks.SignEditCallback;
 
 public abstract class EventRegistrar {
 
-    private void EventRegistrer(){}
+    private EventRegistrar(){}
 
     public static void registerEvents() {
         registerSignEditEvent();
@@ -33,7 +35,9 @@ public abstract class EventRegistrar {
 
     private static void registerSignEditEvent() {
         SignEditCallback.EVENT.register((signEditEvent, server) -> {
-            SignLogger.LOGGER.info(signEditEvent.toString());
+            if(PreferencesConfig.DO_CONSOLE_LOGGING.getEntry().getValue()) {
+                SignLogger.LOGGER.info(signEditEvent.toString());
+            }
             DatabaseManager.storeSignEditEvent(signEditEvent, server);
             return ActionResult.PASS;
         });
@@ -44,7 +48,7 @@ public abstract class EventRegistrar {
             DatabaseManager.initDatabase(server);
         });
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-
+            DatabaseManager.purgeOldEntries(DatabaseConfig.PURGE_LOGS_OLDER_THAN_X_AMOUNT.getEntry().getValue(), server);
         });
     }
 

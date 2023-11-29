@@ -9,13 +9,15 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
 import xd.arkosammy.SignLogger;
+import xd.arkosammy.configuration.tables.DatabaseConfig;
+import xd.arkosammy.configuration.tables.PreferencesConfig;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class Config {
-
-    //TODO: FINALIZE CONFIG SYSTEM
 
     private Config(){}
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("sign-logger.toml");
@@ -53,16 +55,21 @@ public final class Config {
                     updateConfigFile();
                     SignLogger.LOGGER.info("Applied custom config settings");
                 }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
-    public static void updateConfigFile(){
+    public static void updateConfigFile() throws FileNotFoundException {
         if(CONFIG_BUILDER != null){
             try(CommentedFileConfig fileConfig = CONFIG_BUILDER.build()){
                 if(Files.exists(CONFIG_PATH)){
                     fileConfig.load();
                     saveConfigSettingsToFile(fileConfig);
+                    try(PrintWriter printWriter = new PrintWriter(String.valueOf(CONFIG_PATH))){
+                        printWriter.write("");
+                    }
                     fileConfig.save();
                 } else {
                     SignLogger.LOGGER.warn("Found no preexisting config to load settings from. Creating a new config with default values in " + CONFIG_PATH);
@@ -80,7 +87,6 @@ public final class Config {
                 if(Files.exists(CONFIG_PATH)){
                     fileConfig.load();
                     loadConfigSettingsToMemory(fileConfig);
-
                     return true;
                 } else {
                     return false;
@@ -91,15 +97,18 @@ public final class Config {
     }
 
     private static void saveDefaultConfigSettingsToFile(CommentedFileConfig fileConfig){
-
+        PreferencesConfig.saveToFileWithDefaultValues(fileConfig);
+        DatabaseConfig.saveToFileWithDefaultValues(fileConfig);
     }
 
     private static void saveConfigSettingsToFile(CommentedFileConfig fileConfig){
-
+        PreferencesConfig.saveSettingsToFile(fileConfig);
+        DatabaseConfig.saveSettingsToFile(fileConfig);
     }
 
     private static void loadConfigSettingsToMemory(CommentedFileConfig fileConfig){
-
+        PreferencesConfig.loadSettingsToMemory(fileConfig);
+        DatabaseConfig.loadSettingsToMemory(fileConfig);
     }
 
 }

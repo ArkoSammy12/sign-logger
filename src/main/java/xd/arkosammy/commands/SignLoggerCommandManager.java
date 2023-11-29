@@ -1,16 +1,23 @@
 package xd.arkosammy.commands;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import xd.arkosammy.commands.categories.DatabaseCommands;
 import xd.arkosammy.commands.categories.InspectModeToggle;
 import xd.arkosammy.commands.categories.PageCommands;
+import xd.arkosammy.commands.categories.PreferencesCommands;
+import xd.arkosammy.configuration.Config;
+
+import java.io.IOException;
 
 public abstract class SignLoggerCommandManager {
-
-    //TODO: FINALIZE COMMAND SYSTEM
 
     private SignLoggerCommandManager(){}
 
@@ -21,10 +28,36 @@ public abstract class SignLoggerCommandManager {
                 .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
                 .build();
 
+        //Reload Config node
+        LiteralCommandNode<ServerCommandSource> reloadNode = CommandManager
+                .literal("reload_config")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(4))
+                .executes(context -> {
+
+                    try {
+                        SignLoggerCommandManager.reload(context);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return Command.SINGLE_SUCCESS;
+
+                })
+                .build();
+
         dispatcher.getRoot().addChild(signLoggerNode);
+        signLoggerNode.addChild(reloadNode);
         InspectModeToggle.register(signLoggerNode);
         PageCommands.register(signLoggerNode);
+        PreferencesCommands.register(signLoggerNode);
+        DatabaseCommands.register(signLoggerNode);
 
+    }
+
+    private static void reload(CommandContext<ServerCommandSource> ctx) throws IOException {
+        //If this returns true, then the config file exists, and we can update our values from it
+        if(Config.reloadConfigSettingsInMemory(ctx)) ctx.getSource().sendMessage(Text.literal("Config successfully reloaded"));
+        else ctx.getSource().sendMessage(Text.literal("Found no existing config file to reload values from").formatted(Formatting.RED));
     }
 
 }

@@ -14,7 +14,7 @@ import xd.arkosammy.events.InspectionModeInterface;
 
 public abstract class PageCommands {
 
-    private void PageCommands(){}
+    private PageCommands(){}
 
     public static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
 

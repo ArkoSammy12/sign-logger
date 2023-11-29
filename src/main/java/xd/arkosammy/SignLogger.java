@@ -3,18 +3,18 @@ package xd.arkosammy;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xd.arkosammy.configuration.Config;
 import xd.arkosammy.util.EventRegistrar;
 
-//TODO: HANDLE NPE WARNINGS
-//TODO: CREATE CONFIG
-//TODO: IMPLEMENT DATABASE PURGE
 public class SignLogger implements DedicatedServerModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("sign-logger");
 
 	@Override
 	public void onInitializeServer() {
 
+		Config.initializeConfig();
 		EventRegistrar.registerEvents();
+		LOGGER.info("I will try my best to log your sign edit events :)");
 
 	}
 
