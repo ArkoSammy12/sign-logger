@@ -9,7 +9,6 @@ import xd.arkosammy.util.EventRegistrar;
 public class SignLogger implements DedicatedServerModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("sign-logger");
 	
-	//TODO: INVESTIGATE MOD INCOMPATIBILITY
 	@Override
 	public void onInitializeServer() {
 
