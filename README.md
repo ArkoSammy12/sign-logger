@@ -14,7 +14,7 @@ Inspection mode will be automatically disabled upon dying or leaving the server.
 Whenever a player successfully edits the text of any sign, this event will be logged to the console and stored for future querying. This information includes:
 - The player who edited the sign.
 - The date of the editing.
-- Wwhether the text edited was on the front or back side of the sign.
+- Whether the text edited was on the front or back side of the sign.
 - The coordinates and the world where the sign was edited.
 - The text before and after the edition was made.
 
@@ -44,7 +44,7 @@ The following is the default configuration file generated upon first mod initial
 
 ## Support
 
-If you would like to report a bug, or make a suggestion, you can do so via the mod's [issue tracker]([https://github.com/ArkoSammy12/creeper-healing/issues](https://github.com/ArkoSammy12/sign-logger/issues)) or join my [Discord server](https://discord.gg/UKr8n3b3ze). 
+If you would like to report a bug, or make a suggestion, you can do so via the mod's [issue tracker]([https://github.com/ArkoSammy12/creeper-healing/issues](https://github.com/ArkoSammy12/sign-logger/issues)) or join my [Discord server](https://discord.gg/UKr8n3b3ze). ](https://discord.gg/BsgERe7egV)
 
 ## Building
 
