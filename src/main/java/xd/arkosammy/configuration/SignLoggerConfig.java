@@ -9,8 +9,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
 import xd.arkosammy.SignLogger;
-import xd.arkosammy.configuration.tables.DatabaseConfig;
-import xd.arkosammy.configuration.tables.SettingsConfig;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

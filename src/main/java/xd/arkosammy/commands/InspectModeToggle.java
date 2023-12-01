@@ -1,4 +1,4 @@
-package xd.arkosammy.commands.categories;
+package xd.arkosammy.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -15,7 +15,7 @@ public abstract class InspectModeToggle {
 
     private InspectModeToggle(){}
 
-    public static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
+     static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
 
         //Inspect mode node
         LiteralCommandNode<ServerCommandSource> inspectModeNode = CommandManager

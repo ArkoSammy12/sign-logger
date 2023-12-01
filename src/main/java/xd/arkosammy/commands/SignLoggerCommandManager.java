@@ -9,10 +9,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xd.arkosammy.commands.categories.DatabaseCommands;
-import xd.arkosammy.commands.categories.InspectModeToggle;
-import xd.arkosammy.commands.categories.PageCommands;
-import xd.arkosammy.commands.categories.SettingsCommands;
 import xd.arkosammy.configuration.SignLoggerConfig;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package xd.arkosammy.commands.categories;
+package xd.arkosammy.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -8,13 +8,13 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import xd.arkosammy.configuration.tables.SettingsConfig;
+import xd.arkosammy.configuration.SettingsConfig;
 
 public abstract class SettingsCommands {
 
     private SettingsCommands(){}
 
-    public static void register(LiteralCommandNode<ServerCommandSource> signLogger){
+     static void register(LiteralCommandNode<ServerCommandSource> signLogger){
 
         LiteralCommandNode<ServerCommandSource> settingsNode = CommandManager
                 .literal("settings")

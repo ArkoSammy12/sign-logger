@@ -1,4 +1,4 @@
-package xd.arkosammy.commands.categories;
+package xd.arkosammy.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -9,14 +9,14 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xd.arkosammy.configuration.tables.DatabaseConfig;
+import xd.arkosammy.configuration.DatabaseConfig;
 import xd.arkosammy.util.DatabaseManager;
 
 public abstract class DatabaseCommands {
 
     private DatabaseCommands(){}
 
-    public static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
+     static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
 
         LiteralCommandNode<ServerCommandSource> databaseNode = CommandManager
                 .literal("database")

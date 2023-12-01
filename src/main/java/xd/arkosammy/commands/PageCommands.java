@@ -1,4 +1,4 @@
-package xd.arkosammy.commands.categories;
+package xd.arkosammy.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -16,7 +16,7 @@ public abstract class PageCommands {
 
     private PageCommands(){}
 
-    public static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
+     static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
 
         LiteralCommandNode<ServerCommandSource> pageNode = CommandManager
                 .literal("page")
