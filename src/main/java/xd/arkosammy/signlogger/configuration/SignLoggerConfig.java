@@ -1,4 +1,4 @@
-package xd.arkosammy.configuration;
+package xd.arkosammy.signlogger.configuration;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
@@ -8,7 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
-import xd.arkosammy.SignLogger;
+import xd.arkosammy.signlogger.SignLogger;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

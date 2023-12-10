@@ -1,10 +1,10 @@
-package xd.arkosammy.events.callbacks;
+package xd.arkosammy.signlogger.events.callbacks;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
-import xd.arkosammy.events.SignEditEvent;
+import xd.arkosammy.signlogger.events.SignEditEvent;
 
 
 public interface SignEditCallback {

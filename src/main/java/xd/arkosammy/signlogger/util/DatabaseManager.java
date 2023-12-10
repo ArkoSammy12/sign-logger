@@ -1,10 +1,10 @@
-package xd.arkosammy.util;
+package xd.arkosammy.signlogger.util;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
-import xd.arkosammy.events.SignEditEvent;
-import xd.arkosammy.events.SignEditEventResult;
+import xd.arkosammy.signlogger.events.SignEditEvent;
+import xd.arkosammy.signlogger.events.SignEditEventResult;
 
 import java.sql.*;
 import java.time.LocalDateTime;

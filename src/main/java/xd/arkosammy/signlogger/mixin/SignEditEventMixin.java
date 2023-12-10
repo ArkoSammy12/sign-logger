@@ -1,4 +1,4 @@
-package xd.arkosammy.mixin;
+package xd.arkosammy.signlogger.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xd.arkosammy.events.callbacks.SignEditCallback;
-import xd.arkosammy.events.SignEditEvent;
-import xd.arkosammy.events.SignEditText;
+import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
+import xd.arkosammy.signlogger.events.SignEditEvent;
+import xd.arkosammy.signlogger.events.SignEditText;
 
 import java.time.LocalDateTime;
 import java.util.List;

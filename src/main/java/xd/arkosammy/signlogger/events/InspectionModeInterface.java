@@ -1,4 +1,4 @@
-package xd.arkosammy.events;
+package xd.arkosammy.signlogger.events;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;

@@ -1,4 +1,4 @@
-package xd.arkosammy.configuration;
+package xd.arkosammy.signlogger.configuration;
 
 public class ConfigEntry<T> {
 

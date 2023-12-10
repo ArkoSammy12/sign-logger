@@ -1,4 +1,4 @@
-package xd.arkosammy.mixin;
+package xd.arkosammy.signlogger.mixin;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -12,11 +12,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xd.arkosammy.util.DatabaseManager;
-import xd.arkosammy.events.InspectionModeInterface;
-import xd.arkosammy.events.SignEditEvent;
-import xd.arkosammy.events.SignEditEventResult;
-import xd.arkosammy.events.SignEditText;
+import xd.arkosammy.signlogger.util.DatabaseManager;
+import xd.arkosammy.signlogger.events.InspectionModeInterface;
+import xd.arkosammy.signlogger.events.SignEditEvent;
+import xd.arkosammy.signlogger.events.SignEditEventResult;
+import xd.arkosammy.signlogger.events.SignEditText;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

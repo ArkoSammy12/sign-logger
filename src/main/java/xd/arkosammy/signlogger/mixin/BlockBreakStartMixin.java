@@ -1,4 +1,4 @@
-package xd.arkosammy.mixin;
+package xd.arkosammy.signlogger.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xd.arkosammy.events.callbacks.BlockBreakStartCallback;
+import xd.arkosammy.signlogger.events.callbacks.BlockBreakStartCallback;
 
 @Mixin(targets = "net.minecraft.block.AbstractBlock$AbstractBlockState")
 public abstract class BlockBreakStartMixin {

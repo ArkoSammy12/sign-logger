@@ -1,4 +1,4 @@
-package xd.arkosammy.mixin;
+package xd.arkosammy.signlogger.mixin;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xd.arkosammy.events.callbacks.BlockPlacedCallback;
+import xd.arkosammy.signlogger.events.callbacks.BlockPlacedCallback;
 
 @Mixin(BlockItem.class)
 public abstract class BlockPlaceMixin {

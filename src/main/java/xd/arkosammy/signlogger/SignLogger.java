@@ -1,10 +1,10 @@
-package xd.arkosammy;
+package xd.arkosammy.signlogger;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xd.arkosammy.configuration.SignLoggerConfig;
-import xd.arkosammy.util.EventRegistrar;
+import xd.arkosammy.signlogger.configuration.SignLoggerConfig;
+import xd.arkosammy.signlogger.util.EventRegistrar;
 
 public class SignLogger implements DedicatedServerModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("sign-logger");

@@ -1,7 +1,7 @@
-package xd.arkosammy.configuration;
+package xd.arkosammy.signlogger.configuration;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import xd.arkosammy.SignLogger;
+import xd.arkosammy.signlogger.SignLogger;
 
 import java.util.Arrays;
 

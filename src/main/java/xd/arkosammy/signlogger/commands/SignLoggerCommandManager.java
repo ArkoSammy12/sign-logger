@@ -1,4 +1,4 @@
-package xd.arkosammy.commands;
+package xd.arkosammy.signlogger.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -9,7 +9,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xd.arkosammy.configuration.SignLoggerConfig;
+import xd.arkosammy.signlogger.configuration.SignLoggerConfig;
 
 import java.io.IOException;
 

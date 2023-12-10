@@ -1,4 +1,4 @@
-package xd.arkosammy.commands;
+package xd.arkosammy.signlogger.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;

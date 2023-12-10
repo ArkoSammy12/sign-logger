@@ -1,4 +1,4 @@
-package xd.arkosammy.events;
+package xd.arkosammy.signlogger.events;
 
 import java.time.LocalDateTime;
 

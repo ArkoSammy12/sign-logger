@@ -1,4 +1,4 @@
-package xd.arkosammy.commands;
+package xd.arkosammy.signlogger.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -9,7 +9,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import xd.arkosammy.events.InspectionModeInterface;
+import xd.arkosammy.signlogger.events.InspectionModeInterface;
 
 public abstract class InspectModeToggle {
 

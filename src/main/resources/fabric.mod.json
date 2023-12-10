@@ -16,7 +16,7 @@
 	"environment": "server",
 	"entrypoints": {
 		"server": [
-			"xd.arkosammy.SignLogger"
+          "xd.arkosammy.signlogger.SignLogger"
 		]
 	},
 	"mixins": [

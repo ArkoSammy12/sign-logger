@@ -1,4 +1,4 @@
-package xd.arkosammy.util;
+package xd.arkosammy.signlogger.util;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -9,14 +9,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import xd.arkosammy.SignLogger;
-import xd.arkosammy.commands.SignLoggerCommandManager;
-import xd.arkosammy.configuration.DatabaseConfig;
-import xd.arkosammy.configuration.SettingsConfig;
-import xd.arkosammy.events.InspectionModeInterface;
-import xd.arkosammy.events.callbacks.BlockBreakStartCallback;
-import xd.arkosammy.events.callbacks.BlockPlacedCallback;
-import xd.arkosammy.events.callbacks.SignEditCallback;
+import xd.arkosammy.signlogger.SignLogger;
+import xd.arkosammy.signlogger.commands.SignLoggerCommandManager;
+import xd.arkosammy.signlogger.configuration.DatabaseConfig;
+import xd.arkosammy.signlogger.configuration.SettingsConfig;
+import xd.arkosammy.signlogger.events.InspectionModeInterface;
+import xd.arkosammy.signlogger.events.callbacks.BlockBreakStartCallback;
+import xd.arkosammy.signlogger.events.callbacks.BlockPlacedCallback;
+import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
 
 public abstract class EventRegistrar {
 

@@ -1,4 +1,4 @@
-package xd.arkosammy.events;
+package xd.arkosammy.signlogger.events;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;

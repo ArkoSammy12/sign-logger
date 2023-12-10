@@ -1,4 +1,4 @@
-package xd.arkosammy.events;
+package xd.arkosammy.signlogger.events;
 
 import net.minecraft.block.entity.SignText;
 import net.minecraft.server.filter.FilteredMessage;

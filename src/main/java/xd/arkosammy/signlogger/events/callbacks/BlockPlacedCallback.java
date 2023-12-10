@@ -1,4 +1,4 @@
-package xd.arkosammy.events.callbacks;
+package xd.arkosammy.signlogger.events.callbacks;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
