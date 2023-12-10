@@ -36,18 +36,22 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
     @Unique
     private int pageIndex = 0;
 
+    @Unique
     public void sign_logger$setPageIndex(int pageIndex){
         this.pageIndex = pageIndex;
     }
 
+    @Unique
     public List<List<SignEditEventResult>> sign_logger$getCachedSignEditResults(){
         return this.cachedSignEditResults;
     }
 
+    @Unique
     public boolean sign_logger$isInspecting(){
         return this.isInspecting;
     }
 
+    @Unique
     public void sign_logger$setIsInspecting(boolean isInspecting){
         this.isInspecting = isInspecting;
     }

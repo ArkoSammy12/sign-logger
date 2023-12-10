@@ -47,6 +47,7 @@ public abstract class SignLoggerCommandManager {
         PageCommands.register(signLoggerNode);
         SettingsCommands.register(signLoggerNode);
         DatabaseCommands.register(signLoggerNode);
+        SearchCommand.register(signLoggerNode);
 
     }
 
