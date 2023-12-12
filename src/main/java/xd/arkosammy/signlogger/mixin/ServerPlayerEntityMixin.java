@@ -123,14 +123,14 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
             Duration timeSinceLog = Duration.between(localDateTime, LocalDateTime.now());
 
             MutableText durationText = Text.literal(formatElapsedTime(timeSinceLog) + " ")
-                    .setStyle(Style.EMPTY.withHoverEvent(HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.literal(localDateTime.format(SignEditEvent.DTF)))))
+                    .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(localDateTime.format(SignEditEvent.DTF)))))
                     .formatted(Formatting.GRAY);
             MutableText authorText = Text.literal(author + " ")
                     .formatted(Formatting.BLUE);
             MutableText editedSignText = Text.literal("edited the ")
                     .formatted(Formatting.GRAY);
             MutableText sideText = Text.literal((isFrontSide ? "front" : "back") + "-side text ")
-                    .setStyle(Style.EMPTY.withHoverEvent(HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.literal("From " + originalText.toString() + " to " + newText.toString()))))
+                    .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("From " + originalText.toString() + " to " + newText.toString()))))
                     .formatted(Formatting.BLUE);
             MutableText middleText = Text.literal("of a sign at ")
                     .formatted(Formatting.GRAY);

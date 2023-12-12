@@ -10,6 +10,10 @@ import net.minecraft.server.command.ServerCommandSource;
 
 public abstract class SearchCommand {
 
+    //TODO: Implement search feature and command
+
+    /*
+
     private SearchCommand(){}
 
     static void register(LiteralCommandNode<ServerCommandSource> signLoggerNode){
@@ -42,5 +46,7 @@ public abstract class SearchCommand {
         //System.out.println(searchQuery);
         return Command.SINGLE_SUCCESS;
     }
+
+    */
 
 }
