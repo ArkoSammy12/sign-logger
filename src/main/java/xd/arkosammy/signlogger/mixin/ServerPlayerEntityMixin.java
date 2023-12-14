@@ -141,7 +141,7 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
             MutableText worldText = Text.literal(SignEditEvent.getWorldRegistryKeyAsAltString(worldRegistryKey))
                     .formatted(Formatting.BLUE);
 
-            MutableText logLineText = durationText.append(authorText).append(editedSignText).append(sideText).append(middleText).append(positionText).append(preWorldText).append(worldText);
+            MutableText logLineText = Text.empty().append(durationText).append(authorText).append(editedSignText).append(sideText).append(middleText).append(positionText).append(preWorldText).append(worldText);
             logLines.append((signEditEventResultIterator.hasNext() ? logLineText.append("\n") : logLineText));
 
         }
@@ -161,7 +161,8 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
         MutableText footerSuffix = Text.literal("---")
                 .formatted(Formatting.GREEN);
 
-        this.sendMessage(footerPrefix.append(footerPreviousPage.append(footerMiddle.append(footerNextPage.append(footerSuffix)))));
+        MutableText footerText = Text.empty().append(footerPrefix).append(footerPreviousPage).append(footerMiddle).append(footerNextPage).append(footerSuffix);
+        this.sendMessage(footerText);
 
     }
 
