@@ -80,7 +80,7 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
             return;
         }
 
-        signEditEventResults.sort(Comparator.comparing(SignEditEventResult::getLocalDateTime).reversed());
+        signEditEventResults.sort(Comparator.comparing(SignEditEventResult::timestamp).reversed());
 
         cachedSignEditResults.clear();
         pageIndex = 0;
@@ -102,7 +102,7 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
     @Unique
     public void sign_logger$showPage(){
 
-        String blockPosHeader = this.cachedSignEditResults.get(0).get(0).getBlockPos();
+        String blockPosHeader = this.cachedSignEditResults.get(0).get(0).blockPos();
         MutableText headerText = Text.literal(String.format("-- Searching sign logs at %s --", blockPosHeader))
                 .formatted(Formatting.GREEN);
         this.sendMessage(headerText);
@@ -113,12 +113,12 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
 
             SignEditEventResult signEditEventResult = signEditEventResultIterator.next();
 
-            String author = signEditEventResult.getAuthor();
-            String pos = signEditEventResult.getBlockPos();
-            String worldRegistryKey = signEditEventResult.getWorldRegistryKey();
-            SignEditText originalText = signEditEventResult.getOriginalText();
-            SignEditText newText = signEditEventResult.getNewText();
-            LocalDateTime localDateTime = signEditEventResult.getLocalDateTime();
+            String author = signEditEventResult.author();
+            String pos = signEditEventResult.blockPos();
+            String worldRegistryKey = signEditEventResult.worldRegistryKey();
+            SignEditText originalText = signEditEventResult.originalText();
+            SignEditText newText = signEditEventResult.newText();
+            LocalDateTime localDateTime = signEditEventResult.timestamp();
             boolean isFrontSide = signEditEventResult.isFrontSide();
             Duration timeSinceLog = Duration.between(localDateTime, LocalDateTime.now());
 

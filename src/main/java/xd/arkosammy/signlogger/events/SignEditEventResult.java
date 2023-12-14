@@ -2,53 +2,7 @@ package xd.arkosammy.signlogger.events;
 
 import java.time.LocalDateTime;
 
-public class SignEditEventResult {
-
-    private final String author;
-    private final String blockPos;
-    private final String worldRegistryKey;
-    private final SignEditText originalText;
-    private final SignEditText newText;
-    private final LocalDateTime timestamp;
-    private final boolean isFrontSide;
-
-    private SignEditEventResult(Builder builder){
-        this.author = builder.author;
-        this.blockPos = builder.blockPos;
-        this.worldRegistryKey = builder.worldRegistryKey;
-        this.originalText = builder.originalText;
-        this.newText = builder.newText;
-        this.timestamp = builder.timestamp;
-        this.isFrontSide = builder.isFrontSide;
-    }
-
-    public String getAuthor(){
-        return this.author;
-    }
-
-    public String getBlockPos(){
-        return this.blockPos;
-    }
-
-    public String getWorldRegistryKey(){
-        return this.worldRegistryKey;
-    }
-
-    public SignEditText getOriginalText(){
-        return this.originalText;
-    }
-
-    public SignEditText getNewText(){
-        return this.newText;
-    }
-
-    public LocalDateTime getLocalDateTime(){
-        return this.timestamp;
-    }
-
-    public boolean isFrontSide(){
-        return this.isFrontSide;
-    }
+public record SignEditEventResult(String author, String blockPos, String worldRegistryKey, SignEditText originalText, SignEditText newText, LocalDateTime timestamp, boolean isFrontSide) {
 
     @Override
     public String toString(){
@@ -103,7 +57,7 @@ public class SignEditEventResult {
         }
 
         public SignEditEventResult build(){
-            return new SignEditEventResult(this);
+            return new SignEditEventResult(this.author, this.blockPos, this.worldRegistryKey, this.originalText, this.newText, this.timestamp, this.isFrontSide);
         }
 
 
