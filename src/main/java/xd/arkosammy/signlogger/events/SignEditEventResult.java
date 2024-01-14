@@ -11,9 +11,20 @@ public record SignEditEventResult(String author, String blockPos, String worldRe
                 this.author,
                 this.isFrontSide ? "front" : "back",
                 this.blockPos,
-                SignEditEvent.getWorldRegistryKeyAsAltString(this.worldRegistryKey),
+                this.getWorldRegistryKeyForDisplay(),
                 this.originalText.toString(),
                 this.newText.toString());
+    }
+
+    public String getWorldRegistryKeyForDisplay() {
+
+        String worldName = this.worldRegistryKey;
+        int colonCharIndex = worldRegistryKey.lastIndexOf(':');
+        if (colonCharIndex != -1) {
+            worldName = worldRegistryKey.substring(colonCharIndex + 1, worldRegistryKey.length() - 1);
+        }
+        return worldName;
+
     }
 
     public static class Builder {

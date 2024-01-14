@@ -3,6 +3,7 @@ package xd.arkosammy.signlogger.mixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,10 +18,11 @@ public abstract class BlockBreakStartMixin {
 
     @Shadow protected abstract BlockState asBlockState();
 
-    @Inject(method = "onBlockBreakStart", at = @At("HEAD"))
+    @Inject(method = "onBlockBreakStart", at = @At("HEAD"), cancellable = true)
     private void onBlockBreakStart(World world, BlockPos pos, PlayerEntity player, CallbackInfo ci){
-        if(world instanceof ServerWorld serverWorld) {
-            BlockBreakStartCallback.EVENT.invoker().onBlockBreakStartCallback(serverWorld, pos, this.asBlockState(), player);
+        boolean result = BlockBreakStartCallback.EVENT.invoker().onBlockBreakStartCallback(world, pos, this.asBlockState(), player);
+        if(!result){
+            ci.cancel();
         }
     }
 

@@ -1,8 +1,11 @@
 package xd.arkosammy.signlogger.util;
 
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import xd.arkosammy.signlogger.SignLogger;
 import xd.arkosammy.signlogger.events.SignEditEvent;
 import xd.arkosammy.signlogger.events.SignEditEventResult;
 
@@ -45,7 +48,7 @@ public abstract class DatabaseManager {
             statement.execute(sql);
 
         } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException(e);
+            SignLogger.LOGGER.error("Error initializing database: " + e);
         }
 
     }
@@ -61,7 +64,7 @@ public abstract class DatabaseManager {
 
             preparedStatement.setString(1, signEditEvent.author().getDisplayName().getString());
             preparedStatement.setString(2, SignEditEvent.getBlockPosAsAltString(signEditEvent.blockPos()));
-            preparedStatement.setString(3, signEditEvent.worldRegistryKey() != null ? signEditEvent.worldRegistryKey().toString() : "NULL");
+            preparedStatement.setString(3, signEditEvent.worldRegistryKey().toString());
             preparedStatement.setString(4, signEditEvent.originalText().getTextLines()[0]);
             preparedStatement.setString(5, signEditEvent.originalText().getTextLines()[1]);
             preparedStatement.setString(6, signEditEvent.originalText().getTextLines()[2]);
@@ -76,22 +79,24 @@ public abstract class DatabaseManager {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            SignLogger.LOGGER.error("Error attempting to store sign-edit event log: " + e);
         }
-
 
     }
 
-    public static Optional<List<SignEditEventResult>> queryFromBlockPos(BlockPos blockPos, MinecraftServer server){
+    public static Optional<List<SignEditEventResult>> queryFromBlockPos(BlockPos blockPos, MinecraftServer server, RegistryKey<World> worldRegistryKey){
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
-        String blockPosAsString = SignEditEvent.getBlockPosAsAltString(blockPos);
 
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM sign_edit_events WHERE block_pos=?")) {
+                     "SELECT * FROM sign_edit_events WHERE block_pos=? AND world_registry_key=?")) {
+
+            String blockPosAsString = SignEditEvent.getBlockPosAsAltString(blockPos);
+            String worldRegistryKeyAsString = worldRegistryKey.toString();
 
             preparedStatement.setString(1, blockPosAsString);
+            preparedStatement.setString(2, worldRegistryKeyAsString);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()){
 
@@ -123,16 +128,12 @@ public abstract class DatabaseManager {
                     SignEditEventResult signEditEventResult = new SignEditEventResult.Builder(timestamp, isFrontSide).withAuthor(author).withBlockPos(pos).withOriginalText(originalText).withNewText(newText).withWorldRegistryKey(world).build();
                     signEditEventResults.add(signEditEventResult);
                 }
-
                 return Optional.of(signEditEventResults);
-
             }
 
-
         } catch (SQLException e){
-            e.printStackTrace();
+            SignLogger.LOGGER.error("Error querying from database: " + e);
         }
-
         return Optional.empty();
 
     }
@@ -141,21 +142,18 @@ public abstract class DatabaseManager {
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
         int deletedRows = 0;
-
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "DELETE FROM sign_edit_events WHERE timestamp < ?")) {
 
             LocalDateTime thresholdDateTime = LocalDateTime.now().minusDays(daysThreshold);
             Timestamp thresholdTimestamp = Timestamp.valueOf(thresholdDateTime);
-
             preparedStatement.setTimestamp(1, thresholdTimestamp);
             deletedRows = preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            SignLogger.LOGGER.error("Error attempting to purge database: " + e);
         }
-
         return deletedRows;
 
     }

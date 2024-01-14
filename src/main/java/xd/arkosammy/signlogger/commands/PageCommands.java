@@ -10,7 +10,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xd.arkosammy.signlogger.events.InspectionModeInterface;
+import xd.arkosammy.signlogger.events.IInspectionModeAccess;
 
 public abstract class PageCommands {
 
@@ -41,13 +41,13 @@ public abstract class PageCommands {
 
         int newPageIndex = IntegerArgumentType.getInteger(ctx, "page") - 1;
 
-        if(newPageIndex < 0 || newPageIndex > ((InspectionModeInterface)ctx.getSource().getPlayerOrThrow()).sign_logger$getCachedSignEditResults().size() - 1){
+        if(newPageIndex < 0 || newPageIndex > ((IInspectionModeAccess)ctx.getSource().getPlayerOrThrow()).sign_logger$getCachedSignEditResults().size() - 1){
             ctx.getSource().getPlayerOrThrow().sendMessage(Text.literal("No more pages to show").formatted(Formatting.RED));
             return Command.SINGLE_SUCCESS;
         }
 
-        ((InspectionModeInterface)ctx.getSource().getPlayerOrThrow()).sign_logger$setPageIndex(newPageIndex);
-        ((InspectionModeInterface)ctx.getSource().getPlayerOrThrow()).sign_logger$showPage();
+        ((IInspectionModeAccess)ctx.getSource().getPlayerOrThrow()).sign_logger$setPageIndex(newPageIndex);
+        ((IInspectionModeAccess)ctx.getSource().getPlayerOrThrow()).sign_logger$showPage();
         return Command.SINGLE_SUCCESS;
 
     }

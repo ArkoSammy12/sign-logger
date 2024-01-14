@@ -9,7 +9,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import xd.arkosammy.signlogger.events.InspectionModeInterface;
+import xd.arkosammy.signlogger.events.IInspectionModeAccess;
 
 public abstract class InspectModeToggle {
 
@@ -41,7 +41,7 @@ public abstract class InspectModeToggle {
 
     private static int setInspectModeCommand(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 
-        ((InspectionModeInterface)ctx.getSource().getPlayerOrThrow()).sign_logger$setIsInspecting(BoolArgumentType.getBool(ctx, "value"));
+        ((IInspectionModeAccess)ctx.getSource().getPlayerOrThrow()).sign_logger$setIsInspecting(BoolArgumentType.getBool(ctx, "value"));
         ctx.getSource().getPlayerOrThrow().sendMessage(Text.literal("Inspect mode has been: " + (BoolArgumentType.getBool(ctx, "value") ? "enabled" : "disabled")));
         return Command.SINGLE_SUCCESS;
 
@@ -49,7 +49,7 @@ public abstract class InspectModeToggle {
 
     private static int getInspectModeCommand(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 
-        ctx.getSource().getPlayerOrThrow().sendMessage(Text.literal("Inspect mode is currently: " + ((((InspectionModeInterface)ctx.getSource().getPlayerOrThrow()).sign_logger$isInspecting()) ? "enabled" : "disabled")));
+        ctx.getSource().getPlayerOrThrow().sendMessage(Text.literal("Inspect mode is currently: " + ((((IInspectionModeAccess)ctx.getSource().getPlayerOrThrow()).sign_logger$isInspecting()) ? "enabled" : "disabled")));
         return Command.SINGLE_SUCCESS;
 
     }
