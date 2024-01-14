@@ -51,9 +51,6 @@ dependencies {
 	//Java Database Connectivity API
 	include(implementation "org.xerial:sqlite-jdbc:3.44.0.0")
 
-
-	//Mixin extras
-	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0-rc.4")))
 }
 
 processResources {
