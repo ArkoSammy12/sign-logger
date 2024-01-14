@@ -12,6 +12,7 @@ import net.minecraft.server.filter.FilteredMessage;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
