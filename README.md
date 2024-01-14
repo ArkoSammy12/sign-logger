@@ -5,7 +5,7 @@ This simple server side mod allows for the tracking of sign editions in the worl
 
 ### Inspection mode
 
-If you have OP permissions in the server, you are able to toggle inspection mode via `/sign-logger inspect true` and `/sign-logger inspect false`, respectively. Once in inspection mode, you will not be able to break or place any blocks. Left click any currently placed block to see the sign-edit logs of the coordinates of the clicked block. You can also "place" a block in an empty space to see the sign-edit logs at that location.
+If you have OP permissions in the server, you are able to toggle inspection mode via `/sign-logger inspect true` and `/sign-logger inspect false`, respectively. Once in inspection mode, you will not be able to break or place any blocks. Left click any currently placed block to see the sign-edit logs of the coordinates of the clicked block. You can also right click a block to to see the sign-edit logs of the coordinate adjacent to the face of the block you right clicked.
 
 Inspection mode will be automatically disabled upon dying or leaving the server.
 
