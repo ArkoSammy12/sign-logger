@@ -7,29 +7,20 @@ import net.minecraft.text.Text;
 import java.util.Arrays;
 import java.util.List;
 
+public record SignEditText(String[] textLines) {
 
-public class SignEditText {
-
-    private final String[] textLines = new String[]{"", "", "", ""};
-
-    public SignEditText(SignText signText){
-        Text[] messages = signText.getMessages(false);
-        for(int i = 0; i < 4; i++){
-            textLines[i] = messages[i].getString();
-        }
+    public SignEditText(SignText signText) {
+        this(Arrays.stream(signText.getMessages(false)).map(Text::getString).toArray(String[]::new));
     }
 
-    public SignEditText(List<FilteredMessage> messageList){
-        FilteredMessage[] filteredMessages = messageList.toArray(new FilteredMessage[0]);
-        for(int i = 0; i < 4; i++){
-            textLines[i] = filteredMessages[i].getString();
-        }
+    public SignEditText(List<FilteredMessage> messageList) {
+        this(Arrays.stream(messageList.toArray(FilteredMessage[]::new)).map(FilteredMessage::getString).toArray(String[]::new));
     }
 
-    public SignEditText(String[] messages){
-        System.arraycopy(messages, 0, textLines, 0, 4);
+    public SignEditText(String[] textLines) {
+        this.textLines = new String[]{"", "", "", ""};
+        System.arraycopy(textLines, 0, this.textLines, 0, Math.min(textLines.length, 4));
     }
-
 
     public String[] getTextLines(){
         return this.textLines;

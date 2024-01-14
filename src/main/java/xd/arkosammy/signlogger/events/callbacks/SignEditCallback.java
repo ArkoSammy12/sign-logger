@@ -6,7 +6,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
 import xd.arkosammy.signlogger.events.SignEditEvent;
 
-
 public interface SignEditCallback {
 
     Event<SignEditCallback> EVENT = EventFactory.createArrayBacked(SignEditCallback.class,

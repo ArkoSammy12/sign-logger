@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xd.arkosammy.signlogger.util.DatabaseManager;
-import xd.arkosammy.signlogger.events.InspectionModeInterface;
+import xd.arkosammy.signlogger.events.IInspectionModeAccess;
 import xd.arkosammy.signlogger.events.SignEditEvent;
 import xd.arkosammy.signlogger.events.SignEditEventResult;
 import xd.arkosammy.signlogger.events.SignEditText;
@@ -23,12 +23,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin implements InspectionModeInterface {
+public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
 
     @Shadow public abstract void sendMessage(Text message);
 
     @Unique
-    private boolean isInspecting;
+    private boolean isInspecting = false;
 
     @Unique
     private final List<List<SignEditEventResult>> cachedSignEditResults = new ArrayList<>();
@@ -69,7 +69,7 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
 
     @Unique
     public void sign_logger$inspect(BlockPos blockPos, ServerWorld world){
-        Optional<List<SignEditEventResult>> signEditEventResultListOptional = DatabaseManager.queryFromBlockPos(blockPos, world.getServer());
+        Optional<List<SignEditEventResult>> signEditEventResultListOptional = DatabaseManager.queryFromBlockPos(blockPos, world.getServer(), world.getRegistryKey());
         if(signEditEventResultListOptional.isEmpty()){
             this.sendMessage(Text.literal("No logs found for this coordinate").formatted(Formatting.RED));
             return;
@@ -81,17 +81,15 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
         }
 
         signEditEventResults.sort(Comparator.comparing(SignEditEventResult::timestamp).reversed());
-
         cachedSignEditResults.clear();
         pageIndex = 0;
 
-
+        // Paginate sign edit logs
         for (int i = 0; i < signEditEventResults.size(); i++) {
             if (i % 10 == 0) {
                 List<SignEditEventResult> page = new ArrayList<>();
                 cachedSignEditResults.add(page);
             }
-
             cachedSignEditResults.get(cachedSignEditResults.size() - 1).add(signEditEventResults.get(i));
         }
 
@@ -115,7 +113,7 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
 
             String author = signEditEventResult.author();
             String pos = signEditEventResult.blockPos();
-            String worldRegistryKey = signEditEventResult.worldRegistryKey();
+            String worldRegistryKey = signEditEventResult.getWorldRegistryKeyForDisplay();
             SignEditText originalText = signEditEventResult.originalText();
             SignEditText newText = signEditEventResult.newText();
             LocalDateTime localDateTime = signEditEventResult.timestamp();
@@ -138,7 +136,7 @@ public abstract class ServerPlayerEntityMixin implements InspectionModeInterface
                     .formatted(Formatting.BLUE);
             MutableText preWorldText = Text.literal("in ")
                     .formatted(Formatting.GRAY);
-            MutableText worldText = Text.literal(SignEditEvent.getWorldRegistryKeyAsAltString(worldRegistryKey))
+            MutableText worldText = Text.literal(worldRegistryKey)
                     .formatted(Formatting.BLUE);
 
             MutableText logLineText = Text.empty().append(durationText).append(authorText).append(editedSignText).append(sideText).append(middleText).append(positionText).append(preWorldText).append(worldText);

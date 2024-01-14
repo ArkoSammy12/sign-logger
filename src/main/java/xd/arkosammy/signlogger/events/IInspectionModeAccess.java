@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
-public interface InspectionModeInterface {
+public interface IInspectionModeAccess {
 
     boolean sign_logger$isInspecting();
 

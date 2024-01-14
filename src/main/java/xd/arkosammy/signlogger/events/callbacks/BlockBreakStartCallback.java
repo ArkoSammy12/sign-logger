@@ -4,23 +4,22 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public interface BlockBreakStartCallback {
 
     Event<BlockBreakStartCallback> EVENT = EventFactory.createArrayBacked(BlockBreakStartCallback.class,
             (listeners) -> (((world, pos, state, playerEntity) -> {
                 for(BlockBreakStartCallback listener : listeners){
-                    ActionResult result = listener.onBlockBreakStartCallback(world, pos, state, playerEntity);
-                    if(result != ActionResult.PASS){
-                        return result;
+                    boolean result = listener.onBlockBreakStartCallback(world, pos, state, playerEntity);
+                    if(!result){
+                        return false;
                     }
                 }
-                return ActionResult.PASS;
+                return true;
             })));
 
-    ActionResult onBlockBreakStartCallback(ServerWorld world, BlockPos pos, BlockState state, PlayerEntity playerEntity);
+    boolean onBlockBreakStartCallback(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity);
 
 }
