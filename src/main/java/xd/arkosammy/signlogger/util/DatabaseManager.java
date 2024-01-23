@@ -46,7 +46,7 @@ public abstract class DatabaseManager {
                     author_name TEXT,
                     block_pos TEXT,
                     world_registry_key TEXT,
-                    timestamp TIMESTAMP,
+                    timestamp TIMESTAMP
                 );""";
 
         String dyedSignEventTable = """
