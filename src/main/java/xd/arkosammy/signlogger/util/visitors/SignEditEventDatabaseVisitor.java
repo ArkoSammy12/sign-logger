@@ -4,7 +4,13 @@ import xd.arkosammy.signlogger.events.*;
 
 import java.sql.*;
 
-public record SignEditEventDatabaseVisitor(Connection databaseConnection) implements SignEditEventVisitor {
+public class SignEditEventDatabaseVisitor implements SignEditEventVisitor {
+
+    private final Connection databaseConnection;
+
+    public SignEditEventDatabaseVisitor(Connection databaseConnection){
+        this.databaseConnection = databaseConnection;
+    }
 
     @Override
     public void visit(ChangedTextSignEvent changedTextSignEvent) {
