@@ -6,7 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public record ChangedTextSignEvent(ServerPlayerEntity author, BlockPos blockPos, RegistryKey<World> worldRegistryKey, SignEditText originalText, SignEditText newText, LocalDateTime timestamp, boolean isFrontSide) implements SignEditEvent {
