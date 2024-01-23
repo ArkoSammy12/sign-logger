@@ -161,10 +161,27 @@ public abstract class DatabaseManager {
     public static int purgeOldEntries(int daysThreshold, MinecraftServer server) {
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
+        int totalDeletedRows = 0;
+
+        try (Connection connection = DriverManager.getConnection(url)) {
+
+            totalDeletedRows += purgeTable(connection, "sign_edit_events", daysThreshold);
+            totalDeletedRows += purgeTable(connection, "waxed_sign_events", daysThreshold);
+            totalDeletedRows += purgeTable(connection, "dyed_sign_events", daysThreshold);
+            totalDeletedRows += purgeTable(connection, "glowed_sign_events", daysThreshold);
+
+        } catch (SQLException e) {
+            SignLogger.LOGGER.error("Error attempting to purge databases: " + e);
+        }
+
+        return totalDeletedRows;
+    }
+
+    private static int purgeTable(Connection connection, String tableName, int daysThreshold) throws SQLException {
         int deletedRows = 0;
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE FROM sign_edit_events WHERE timestamp < ?")) {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "DELETE FROM " + tableName + " WHERE timestamp < ?")) {
 
             LocalDateTime thresholdDateTime = LocalDateTime.now().minusDays(daysThreshold);
             Timestamp thresholdTimestamp = Timestamp.valueOf(thresholdDateTime);
@@ -172,10 +189,10 @@ public abstract class DatabaseManager {
             deletedRows = preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            SignLogger.LOGGER.error("Error attempting to purge database: " + e);
+            SignLogger.LOGGER.error("Error attempting to purge " + tableName + " table: " + e);
         }
-        return deletedRows;
 
+        return deletedRows;
     }
 
 }
