@@ -4,18 +4,6 @@ import java.time.LocalDateTime;
 
 public record SignEditEventResult(String author, String blockPos, String worldRegistryKey, SignEditText originalText, SignEditText newText, LocalDateTime timestamp, boolean isFrontSide) {
 
-    @Override
-    public String toString(){
-        return String.format("[%s] %s edited the %s-side text of a sign at %s in %s, from %s, to %s",
-                this.timestamp,
-                this.author,
-                this.isFrontSide ? "front" : "back",
-                this.blockPos,
-                this.getWorldRegistryKeyForDisplay(),
-                this.originalText.toString(),
-                this.newText.toString());
-    }
-
     public String getWorldRegistryKeyForDisplay() {
 
         String worldName = this.worldRegistryKey;

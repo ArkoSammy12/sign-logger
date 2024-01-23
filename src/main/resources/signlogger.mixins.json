@@ -5,8 +5,12 @@
   "mixins": [
     "BlockBreakStartMixin",
     "BlockPlacedMixin",
+    "DyeItemMixin",
+    "GlowInkSacItem",
+    "HoneycombItemMixin",
+    "InkSacItemMixin",
     "ServerPlayerEntityMixin",
-    "SignEditEventMixin"
+    "SignBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -12,11 +12,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xd.arkosammy.signlogger.events.*;
 import xd.arkosammy.signlogger.util.DatabaseManager;
-import xd.arkosammy.signlogger.events.IInspectionModeAccess;
-import xd.arkosammy.signlogger.events.SignEditEvent;
-import xd.arkosammy.signlogger.events.SignEditEventResult;
-import xd.arkosammy.signlogger.events.SignEditText;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

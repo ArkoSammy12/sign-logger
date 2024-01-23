@@ -12,24 +12,23 @@ import net.minecraft.server.filter.FilteredMessage;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
-import xd.arkosammy.signlogger.events.SignEditEvent;
+import xd.arkosammy.signlogger.events.ChangedTextSignEvent;
 import xd.arkosammy.signlogger.events.SignEditText;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Mixin(SignBlockEntity.class)
-public abstract class SignEditEventMixin extends BlockEntity {
+public abstract class SignBlockEntityMixin extends BlockEntity {
 
 
-	private SignEditEventMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	private SignBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
@@ -52,8 +51,8 @@ public abstract class SignEditEventMixin extends BlockEntity {
 		if(originalText.equals(newText)){
 			return;
 		}
-		SignEditEvent signEditEvent = new SignEditEvent(serverPlayerEntity, blockPos, worldRegistryKey, originalText, newText, now, front);
-		SignEditCallback.EVENT.invoker().onSignEditedCallback(signEditEvent, server);
+		ChangedTextSignEvent changedTextSignEvent = new ChangedTextSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, originalText, newText, now, front);
+		SignEditCallback.EVENT.invoker().onSignEditedCallback(changedTextSignEvent, server);
 
 	}
 

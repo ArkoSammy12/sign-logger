@@ -38,7 +38,7 @@ public abstract class EventRegistrar {
     private static void registerSignEditEvent() {
         SignEditCallback.EVENT.register((signEditEvent, server) -> {
             if(SettingsConfig.DO_CONSOLE_LOGGING.getEntry().getValue()) {
-                SignLogger.LOGGER.info(signEditEvent.toString());
+                SignLogger.LOGGER.info(signEditEvent.getLogString());
             }
             DatabaseManager.storeSignEditEvent(signEditEvent, server);
             return ActionResult.PASS;

@@ -6,6 +6,7 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import xd.arkosammy.signlogger.SignLogger;
+import xd.arkosammy.signlogger.events.ChangedTextSignEvent;
 import xd.arkosammy.signlogger.events.SignEditEvent;
 import xd.arkosammy.signlogger.events.SignEditEventResult;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
 
 public abstract class DatabaseManager {
 
@@ -57,29 +59,33 @@ public abstract class DatabaseManager {
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
 
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO sign_edit_events (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+        if(signEditEvent instanceof ChangedTextSignEvent changedTextSignEvent) {
 
-            preparedStatement.setString(1, signEditEvent.author().getDisplayName().getString());
-            preparedStatement.setString(2, SignEditEvent.getBlockPosAsAltString(signEditEvent.blockPos()));
-            preparedStatement.setString(3, signEditEvent.worldRegistryKey().toString());
-            preparedStatement.setString(4, signEditEvent.originalText().getTextLines()[0]);
-            preparedStatement.setString(5, signEditEvent.originalText().getTextLines()[1]);
-            preparedStatement.setString(6, signEditEvent.originalText().getTextLines()[2]);
-            preparedStatement.setString(7, signEditEvent.originalText().getTextLines()[3]);
-            preparedStatement.setString(8, signEditEvent.newText().getTextLines()[0]);
-            preparedStatement.setString(9, signEditEvent.newText().getTextLines()[1]);
-            preparedStatement.setString(10, signEditEvent.newText().getTextLines()[2]);
-            preparedStatement.setString(11, signEditEvent.newText().getTextLines()[3]);
-            preparedStatement.setTimestamp(12, Timestamp.valueOf(signEditEvent.timestamp()));
-            preparedStatement.setBoolean(13, signEditEvent.isFrontSide());
+            try (Connection connection = DriverManager.getConnection(url);
+                 PreparedStatement preparedStatement = connection.prepareStatement(
+                         "INSERT INTO sign_edit_events (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
+                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
-            preparedStatement.executeUpdate();
+                preparedStatement.setString(1, changedTextSignEvent.author().getDisplayName().getString());
+                preparedStatement.setString(2, SignEditEvent.getBlockPosAsLogString(changedTextSignEvent.blockPos()));
+                preparedStatement.setString(3, changedTextSignEvent.worldRegistryKey().toString());
+                preparedStatement.setString(4, changedTextSignEvent.originalText().getTextLines()[0]);
+                preparedStatement.setString(5, changedTextSignEvent.originalText().getTextLines()[1]);
+                preparedStatement.setString(6, changedTextSignEvent.originalText().getTextLines()[2]);
+                preparedStatement.setString(7, changedTextSignEvent.originalText().getTextLines()[3]);
+                preparedStatement.setString(8, changedTextSignEvent.newText().getTextLines()[0]);
+                preparedStatement.setString(9, changedTextSignEvent.newText().getTextLines()[1]);
+                preparedStatement.setString(10, changedTextSignEvent.newText().getTextLines()[2]);
+                preparedStatement.setString(11, changedTextSignEvent.newText().getTextLines()[3]);
+                preparedStatement.setTimestamp(12, Timestamp.valueOf(changedTextSignEvent.timestamp()));
+                preparedStatement.setBoolean(13, changedTextSignEvent.isFrontSide());
 
-        } catch (SQLException e) {
-            SignLogger.LOGGER.error("Error attempting to store sign-edit event log: " + e);
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException e) {
+                SignLogger.LOGGER.error("Error attempting to store sign-edit event log: " + e);
+            }
+
         }
 
     }
@@ -92,7 +98,7 @@ public abstract class DatabaseManager {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT * FROM sign_edit_events WHERE block_pos=? AND world_registry_key=?")) {
 
-            String blockPosAsString = SignEditEvent.getBlockPosAsAltString(blockPos);
+            String blockPosAsString = SignEditEvent.getBlockPosAsLogString(blockPos);
             String worldRegistryKeyAsString = worldRegistryKey.toString();
 
             preparedStatement.setString(1, blockPosAsString);
