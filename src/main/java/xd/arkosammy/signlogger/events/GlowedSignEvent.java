@@ -4,6 +4,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ public record GlowedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regi
     }
 
     @Override
-    public net.minecraft.util.math.BlockPos getBlockPos() {
+    public BlockPos getBlockPos() {
         return this.blockPos;
     }
 
@@ -25,7 +26,7 @@ public record GlowedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regi
     }
 
     @Override
-    public java.time.LocalDateTime getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return this.timestamp;
     }
 
@@ -42,6 +43,11 @@ public record GlowedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regi
     @Override
     public String getLogString() {
         return this.toString();
+    }
+
+    @Override
+    public void accept(SignEditEventVisitor signEditEventVisitor) {
+        signEditEventVisitor.visit(this);
     }
 
     private String getWorldRegistryKeyAsString() {

@@ -6,9 +6,9 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import xd.arkosammy.signlogger.SignLogger;
-import xd.arkosammy.signlogger.events.ChangedTextSignEvent;
-import xd.arkosammy.signlogger.events.SignEditEvent;
-import xd.arkosammy.signlogger.events.SignEditEventResult;
+import xd.arkosammy.signlogger.events.*;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventDatabaseVisitor;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public abstract class DatabaseManager {
 
     public static void initDatabase(MinecraftServer server){
 
-        String sql = """
+        String changedTextEventTable = """
                 CREATE TABLE IF NOT EXISTS sign_edit_events (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     author_name TEXT,
@@ -40,13 +40,48 @@ public abstract class DatabaseManager {
                     is_front_side BOOLEAN
                 );""";
 
+        String waxedSignEventTable = """
+                CREATE TABLE IF NOT EXISTS waxed_sign_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_name TEXT,
+                    block_pos TEXT,
+                    world_registry_key TEXT,
+                    timestamp TIMESTAMP,
+                );""";
+
+        String dyedSignEventTable = """
+                CREATE TABLE IF NOT EXISTS dyed_sign_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_name TEXT,
+                    block_pos TEXT,
+                    world_registry_key TEXT,
+                    old_color TEXT,
+                    new_color TEXT,
+                    timestamp TIMESTAMP,
+                    is_front_side BOOLEAN
+                );""";
+
+        String glowedSignEventTable = """
+                CREATE TABLE IF NOT EXISTS glowed_sign_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_name TEXT,
+                    block_pos TEXT,
+                    world_registry_key TEXT,
+                    is_applying TEXT,
+                    timestamp TIMESTAMP,
+                    is_front_side BOOLEAN
+                );""";
+
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
 
         try(Connection c = DriverManager.getConnection(url)){
 
             Class.forName("org.sqlite.JDBC");
             Statement statement = c.createStatement();
-            statement.execute(sql);
+            statement.execute(changedTextEventTable);
+            statement.execute(waxedSignEventTable);
+            statement.execute(dyedSignEventTable);
+            statement.execute(glowedSignEventTable);
 
         } catch (ClassNotFoundException | SQLException e) {
             SignLogger.LOGGER.error("Error initializing database: " + e);
@@ -58,33 +93,13 @@ public abstract class DatabaseManager {
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
 
-        if(signEditEvent instanceof ChangedTextSignEvent changedTextSignEvent) {
+        try(Connection connection = DriverManager.getConnection(url)){
 
-            try (Connection connection = DriverManager.getConnection(url);
-                 PreparedStatement preparedStatement = connection.prepareStatement(
-                         "INSERT INTO sign_edit_events (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
-                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            SignEditEventVisitor signEditEventVisitor = new SignEditEventDatabaseVisitor(connection);
+            signEditEvent.accept(signEditEventVisitor);
 
-                preparedStatement.setString(1, changedTextSignEvent.author().getDisplayName().getString());
-                preparedStatement.setString(2, SignEditEvent.getBlockPosAsLogString(changedTextSignEvent.blockPos()));
-                preparedStatement.setString(3, changedTextSignEvent.worldRegistryKey().toString());
-                preparedStatement.setString(4, changedTextSignEvent.originalText().getTextLines()[0]);
-                preparedStatement.setString(5, changedTextSignEvent.originalText().getTextLines()[1]);
-                preparedStatement.setString(6, changedTextSignEvent.originalText().getTextLines()[2]);
-                preparedStatement.setString(7, changedTextSignEvent.originalText().getTextLines()[3]);
-                preparedStatement.setString(8, changedTextSignEvent.newText().getTextLines()[0]);
-                preparedStatement.setString(9, changedTextSignEvent.newText().getTextLines()[1]);
-                preparedStatement.setString(10, changedTextSignEvent.newText().getTextLines()[2]);
-                preparedStatement.setString(11, changedTextSignEvent.newText().getTextLines()[3]);
-                preparedStatement.setTimestamp(12, Timestamp.valueOf(changedTextSignEvent.timestamp()));
-                preparedStatement.setBoolean(13, changedTextSignEvent.isFrontSide());
-
-                preparedStatement.executeUpdate();
-
-            } catch (SQLException e) {
-                SignLogger.LOGGER.error("Error attempting to store sign-edit event log: " + e);
-            }
-
+        } catch (SQLException e) {
+            SignLogger.LOGGER.error("Error attempting to store sign-edit event log: " + e);
         }
 
     }

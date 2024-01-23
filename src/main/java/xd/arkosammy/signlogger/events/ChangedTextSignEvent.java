@@ -4,6 +4,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -38,6 +39,11 @@ public record ChangedTextSignEvent(ServerPlayerEntity author, BlockPos blockPos,
     @Override
     public String getLogString(){
         return this.toString();
+    }
+
+    @Override
+    public void accept(SignEditEventVisitor signEditEventVisitor) {
+        signEditEventVisitor.visit(this);
     }
 
     private String getWorldRegistryKeyAsString() {

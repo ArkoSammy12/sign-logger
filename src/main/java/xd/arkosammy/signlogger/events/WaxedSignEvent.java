@@ -4,6 +4,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;
 
@@ -41,6 +42,11 @@ public record WaxedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regis
     @Override
     public String getLogString() {
         return this.toString();
+    }
+
+    @Override
+    public void accept(SignEditEventVisitor signEditEventVisitor) {
+        signEditEventVisitor.visit(this);
     }
 
     private String getWorldRegistryKeyAsString() {
