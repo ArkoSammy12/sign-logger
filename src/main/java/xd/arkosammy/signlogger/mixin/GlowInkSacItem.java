@@ -29,7 +29,7 @@ public abstract class GlowInkSacItem {
         LocalDateTime now = LocalDateTime.now();
         RegistryKey<World> worldRegistryKey = world.getRegistryKey();
         MinecraftServer server = world.getServer();
-        GlowedSignEvent waxedSignEvent = new GlowedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, now, front);
+        GlowedSignEvent waxedSignEvent = new GlowedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, true, now, front);
         SignEditCallback.EVENT.invoker().onSignEditedCallback(waxedSignEvent, server);
 
     }

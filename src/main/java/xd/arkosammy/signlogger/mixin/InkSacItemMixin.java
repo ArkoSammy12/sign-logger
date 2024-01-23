@@ -12,8 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xd.arkosammy.signlogger.events.UnGlowedSignEvent;
-import xd.arkosammy.signlogger.events.WaxedSignEvent;
+import xd.arkosammy.signlogger.events.GlowedSignEvent;
 import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
 
 import java.time.LocalDateTime;
@@ -30,7 +29,7 @@ public abstract class InkSacItemMixin {
         LocalDateTime now = LocalDateTime.now();
         RegistryKey<World> worldRegistryKey = world.getRegistryKey();
         MinecraftServer server = world.getServer();
-        UnGlowedSignEvent waxedSignEvent = new UnGlowedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, now, front);
+        GlowedSignEvent waxedSignEvent = new GlowedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, false, now, front);
         SignEditCallback.EVENT.invoker().onSignEditedCallback(waxedSignEvent, server);
 
     }
