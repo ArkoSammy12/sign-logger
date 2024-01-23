@@ -58,10 +58,9 @@ public record WaxedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regis
     @Override
     public String toString(){
 
-        return String.format("[%s] %s waxed the %s-side of a sign at %s in %s",
+        return String.format("[%s] %s waxed a sign at %s in %s",
                 DTF.format(this.timestamp()),
                 this.author().getDisplayName().getString(),
-                this.isFrontSide() ? "front" : "back",
                 SignEditEvent.getBlockPosAsLogString(this.blockPos),
                 this.getWorldRegistryKeyAsString());
     }
