@@ -14,10 +14,10 @@ import xd.arkosammy.signlogger.SignLogger;
 import xd.arkosammy.signlogger.commands.SignLoggerCommandManager;
 import xd.arkosammy.signlogger.configuration.DatabaseConfig;
 import xd.arkosammy.signlogger.configuration.SettingsConfig;
-import xd.arkosammy.signlogger.events.IInspectionModeAccess;
 import xd.arkosammy.signlogger.events.callbacks.BlockBreakStartCallback;
-import xd.arkosammy.signlogger.events.callbacks.BlockPlacedCallback;
+import xd.arkosammy.signlogger.events.callbacks.AttemptedBlockPlaceCallback;
 import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
+import xd.arkosammy.signlogger.util.ducks.IInspectionModeAccess;
 
 public abstract class EventRegistrar {
 
@@ -38,7 +38,7 @@ public abstract class EventRegistrar {
     private static void registerSignEditEvent() {
         SignEditCallback.EVENT.register((signEditEvent, server) -> {
             if(SettingsConfig.DO_CONSOLE_LOGGING.getEntry().getValue()) {
-                SignLogger.LOGGER.info(signEditEvent.toString());
+                SignLogger.LOGGER.info(signEditEvent.getLogString());
             }
             DatabaseManager.storeSignEditEvent(signEditEvent, server);
             return ActionResult.PASS;
@@ -87,7 +87,7 @@ public abstract class EventRegistrar {
     }
 
     private static void registerBlockPlacedCallback() {
-        BlockPlacedCallback.EVENT.register((context) -> {
+        AttemptedBlockPlaceCallback.EVENT.register((context) -> {
             if (context.getPlayer() instanceof ServerPlayerEntity serverPlayerEntity && ((IInspectionModeAccess) serverPlayerEntity).sign_logger$isInspecting()) {
                 return ActionResult.FAIL;
             }

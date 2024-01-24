@@ -6,12 +6,15 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import xd.arkosammy.signlogger.SignLogger;
-import xd.arkosammy.signlogger.events.SignEditEvent;
-import xd.arkosammy.signlogger.events.SignEditEventResult;
+import xd.arkosammy.signlogger.events.*;
+import xd.arkosammy.signlogger.events.result.SignEditEventQueryResult;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventDatabaseVisitor;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +24,8 @@ public abstract class DatabaseManager {
 
     public static void initDatabase(MinecraftServer server){
 
-        String sql = """
-                CREATE TABLE IF NOT EXISTS sign_edit_events (
+        String changedTextEventTable = """
+                CREATE TABLE IF NOT EXISTS %s (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     author_name TEXT,
                     block_pos TEXT,
@@ -37,7 +40,39 @@ public abstract class DatabaseManager {
                     new_text_line_4 TEXT,
                     timestamp TIMESTAMP,
                     is_front_side BOOLEAN
-                );""";
+                );""".formatted(DatabaseTables.CHANGED_TEXT_EVENTS.getTableName());
+
+        String waxedSignEventTable = """
+                CREATE TABLE IF NOT EXISTS %s (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_name TEXT,
+                    block_pos TEXT,
+                    world_registry_key TEXT,
+                    timestamp TIMESTAMP
+                );""".formatted(DatabaseTables.WAXED_SIGN_EVENTS.getTableName());
+
+        String dyedSignEventTable = """
+                CREATE TABLE IF NOT EXISTS %s (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_name TEXT,
+                    block_pos TEXT,
+                    world_registry_key TEXT,
+                    old_color TEXT,
+                    new_color TEXT,
+                    timestamp TIMESTAMP,
+                    is_front_side BOOLEAN
+                );""".formatted(DatabaseTables.DYED_SIGN_EVENTS.getTableName());
+
+        String glowedSignEventTable = """
+                CREATE TABLE IF NOT EXISTS %s (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_name TEXT,
+                    block_pos TEXT,
+                    world_registry_key TEXT,
+                    is_applying BOOLEAN,
+                    timestamp TIMESTAMP,
+                    is_front_side BOOLEAN
+                );""".formatted(DatabaseTables.GLOWED_SIGN_EVENTS.getTableName());
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
 
@@ -45,7 +80,10 @@ public abstract class DatabaseManager {
 
             Class.forName("org.sqlite.JDBC");
             Statement statement = c.createStatement();
-            statement.execute(sql);
+            statement.execute(changedTextEventTable);
+            statement.execute(waxedSignEventTable);
+            statement.execute(dyedSignEventTable);
+            statement.execute(glowedSignEventTable);
 
         } catch (ClassNotFoundException | SQLException e) {
             SignLogger.LOGGER.error("Error initializing database: " + e);
@@ -57,26 +95,10 @@ public abstract class DatabaseManager {
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
 
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO sign_edit_events (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+        try(Connection connection = DriverManager.getConnection(url)){
 
-            preparedStatement.setString(1, signEditEvent.author().getDisplayName().getString());
-            preparedStatement.setString(2, SignEditEvent.getBlockPosAsAltString(signEditEvent.blockPos()));
-            preparedStatement.setString(3, signEditEvent.worldRegistryKey().toString());
-            preparedStatement.setString(4, signEditEvent.originalText().getTextLines()[0]);
-            preparedStatement.setString(5, signEditEvent.originalText().getTextLines()[1]);
-            preparedStatement.setString(6, signEditEvent.originalText().getTextLines()[2]);
-            preparedStatement.setString(7, signEditEvent.originalText().getTextLines()[3]);
-            preparedStatement.setString(8, signEditEvent.newText().getTextLines()[0]);
-            preparedStatement.setString(9, signEditEvent.newText().getTextLines()[1]);
-            preparedStatement.setString(10, signEditEvent.newText().getTextLines()[2]);
-            preparedStatement.setString(11, signEditEvent.newText().getTextLines()[3]);
-            preparedStatement.setTimestamp(12, Timestamp.valueOf(signEditEvent.timestamp()));
-            preparedStatement.setBoolean(13, signEditEvent.isFrontSide());
-
-            preparedStatement.executeUpdate();
+            SignEditEventVisitor signEditEventVisitor = new SignEditEventDatabaseVisitor(connection);
+            signEditEvent.accept(signEditEventVisitor);
 
         } catch (SQLException e) {
             SignLogger.LOGGER.error("Error attempting to store sign-edit event log: " + e);
@@ -84,67 +106,64 @@ public abstract class DatabaseManager {
 
     }
 
-    public static Optional<List<SignEditEventResult>> queryFromBlockPos(BlockPos blockPos, MinecraftServer server, RegistryKey<World> worldRegistryKey){
+    public static List<SignEditEventQueryResult> queryFromAllTables(BlockPos queryPos, RegistryKey<World> queryWorld, MinecraftServer server){
 
-        String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
-
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM sign_edit_events WHERE block_pos=? AND world_registry_key=?")) {
-
-            String blockPosAsString = SignEditEvent.getBlockPosAsAltString(blockPos);
-            String worldRegistryKeyAsString = worldRegistryKey.toString();
-
-            preparedStatement.setString(1, blockPosAsString);
-            preparedStatement.setString(2, worldRegistryKeyAsString);
-
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-
-                ArrayList<SignEditEventResult> signEditEventResults = new ArrayList<>();
-
-                while(resultSet.next()) {
-
-                    String[] originalText = new String[]{"", "", "", ""};
-                    String[] newText = new String[]{"", "", "", ""};
-
-                    String author = resultSet.getString("author_name");
-                    String pos = resultSet.getString("block_pos");
-                    String world = resultSet.getString("world_registry_key");
-
-                    originalText[0] = resultSet.getString("original_text_line_1");
-                    originalText[1] = resultSet.getString("original_text_line_2");
-                    originalText[2] = resultSet.getString("original_text_line_3");
-                    originalText[3] = resultSet.getString("original_text_line_4");
-
-                    newText[0] = resultSet.getString("new_text_line_1");
-                    newText[1] = resultSet.getString("new_text_line_2");
-                    newText[2] = resultSet.getString("new_text_line_3");
-                    newText[3] = resultSet.getString("new_text_line_4");
-
-
-                    LocalDateTime timestamp = resultSet.getTimestamp("timestamp").toLocalDateTime();
-                    boolean isFrontSide = resultSet.getBoolean("is_front_side");
-
-                    SignEditEventResult signEditEventResult = new SignEditEventResult.Builder(timestamp, isFrontSide).withAuthor(author).withBlockPos(pos).withOriginalText(originalText).withNewText(newText).withWorldRegistryKey(world).build();
-                    signEditEventResults.add(signEditEventResult);
-                }
-                return Optional.of(signEditEventResults);
-            }
-
-        } catch (SQLException e){
-            SignLogger.LOGGER.error("Error querying from database: " + e);
-        }
-        return Optional.empty();
+        EnumSet<DatabaseTables> allTables = EnumSet.allOf(DatabaseTables.class);
+        return queryFromTables(queryPos, queryWorld, server, allTables);
 
     }
 
-    public static int purgeOldEntries(int daysThreshold, MinecraftServer server) {
+    public static List<SignEditEventQueryResult> queryFromTables(BlockPos queryPos, RegistryKey<World> queryWorld,MinecraftServer server, EnumSet<DatabaseTables> selectedTables){
 
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
+        String blockPosAsString = SignEditEvent.getBlockPosAsLogString(queryPos);
+        String worldRegistryKeyAsString = queryWorld.toString();
+        List<SignEditEventQueryResult> signEditEventQueryResults = new ArrayList<>();
+
+        try(Connection connection = DriverManager.getConnection(url)){
+
+            for(DatabaseTables signEditEvent : selectedTables){
+
+                try(PreparedStatement preparedStatement = connection.prepareStatement(
+                        "SELECT * FROM %s WHERE block_pos=? AND world_registry_key=?".formatted(signEditEvent.getTableName()))){
+
+                    preparedStatement.setString(1, blockPosAsString);
+                    preparedStatement.setString(2, worldRegistryKeyAsString);
+
+                    try (ResultSet resultSet = preparedStatement.executeQuery()){
+
+                        Optional<List<SignEditEventQueryResult>> signEditEventQueryResultOptional = signEditEvent.processResultSet(resultSet);
+                        signEditEventQueryResultOptional.ifPresent(signEditEventQueryResults::addAll);
+
+                    }
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+            SignLogger.LOGGER.error("Error querying from sign-logger database " + e);
+        }
+        return signEditEventQueryResults;
+    }
+
+    public static int purgeOldEntries(int daysThreshold, MinecraftServer server) {
+        String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
+        int totalDeletedRows = 0;
+        try (Connection connection = DriverManager.getConnection(url)) {
+            for(DatabaseTables signEditEvent : DatabaseTables.values()){
+                totalDeletedRows += purgeTable(connection, signEditEvent.getTableName(), daysThreshold);
+            }
+        } catch (SQLException e) {
+            SignLogger.LOGGER.error("Error attempting to purge databases: " + e);
+        }
+        return totalDeletedRows;
+    }
+
+    private static int purgeTable(Connection connection, String tableName, int daysThreshold) throws SQLException {
         int deletedRows = 0;
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE FROM sign_edit_events WHERE timestamp < ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "DELETE FROM " + tableName + " WHERE timestamp < ?")) {
 
             LocalDateTime thresholdDateTime = LocalDateTime.now().minusDays(daysThreshold);
             Timestamp thresholdTimestamp = Timestamp.valueOf(thresholdDateTime);
@@ -152,10 +171,9 @@ public abstract class DatabaseManager {
             deletedRows = preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            SignLogger.LOGGER.error("Error attempting to purge database: " + e);
+            SignLogger.LOGGER.error("Error attempting to purge " + tableName + " table: " + e);
         }
         return deletedRows;
-
     }
 
 }

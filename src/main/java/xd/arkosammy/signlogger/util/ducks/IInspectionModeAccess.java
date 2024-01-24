@@ -1,7 +1,8 @@
-package xd.arkosammy.signlogger.events;
+package xd.arkosammy.signlogger.util.ducks;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import xd.arkosammy.signlogger.events.result.SignEditEventQueryResult;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface IInspectionModeAccess {
 
     void sign_logger$setPageIndex(int pageIndex);
 
-    List<List<SignEditEventResult>> sign_logger$getCachedSignEditResults();
+    List<List<SignEditEventQueryResult>> sign_logger$getCachedSignEditResults();
 
     void sign_logger$showPage();
 

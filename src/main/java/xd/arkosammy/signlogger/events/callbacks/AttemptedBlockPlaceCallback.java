@@ -5,12 +5,12 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.util.ActionResult;
 
-public interface BlockPlacedCallback {
+public interface AttemptedBlockPlaceCallback {
 
-    Event<BlockPlacedCallback> EVENT = EventFactory.createArrayBacked(BlockPlacedCallback.class,
+    Event<AttemptedBlockPlaceCallback> EVENT = EventFactory.createArrayBacked(AttemptedBlockPlaceCallback.class,
             (listeners) -> (context -> {
-                for(BlockPlacedCallback listener : listeners){
-                    ActionResult result = listener.onBlockPlacedCallback(context);
+                for(AttemptedBlockPlaceCallback listener : listeners){
+                    ActionResult result = listener.onBlockAttemptedPlace(context);
                     if(result != ActionResult.PASS){
                         return result;
                     }
@@ -18,6 +18,6 @@ public interface BlockPlacedCallback {
                 return ActionResult.PASS;
             })) ;
 
-    ActionResult onBlockPlacedCallback(ItemPlacementContext context);
+    ActionResult onBlockAttemptedPlace(ItemPlacementContext context);
 
 }

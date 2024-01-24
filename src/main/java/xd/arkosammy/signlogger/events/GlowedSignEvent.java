@@ -1,0 +1,76 @@
+package xd.arkosammy.signlogger.events;
+
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
+
+import java.time.LocalDateTime;
+
+public record GlowedSignEvent(ServerPlayerEntity author,
+                              BlockPos blockPos,
+                              RegistryKey<World> worldRegistryKey,
+                              boolean isApplying,
+                              LocalDateTime timestamp,
+                              boolean isFrontSide) implements SignEditEvent {
+
+    @Override
+    public ServerPlayerEntity getAuthor() {
+        return this.author;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.blockPos;
+    }
+
+    @Override
+    public RegistryKey<World> getWorldRegistryKey() {
+        return this.worldRegistryKey;
+    }
+
+    @Override
+    public LocalDateTime getTimestamp() {
+        return this.timestamp;
+    }
+
+    @Override
+    public boolean isFrontSide() {
+        return this.isFrontSide;
+    }
+
+    @Override
+    public String getLogString() {
+        return this.toString();
+    }
+
+    @Override
+    public void accept(SignEditEventVisitor signEditEventVisitor) {
+        signEditEventVisitor.visit(this);
+    }
+
+    private String getWorldRegistryKeyAsString() {
+
+        String worldString = worldRegistryKey.toString();
+        int colonCharIndex = worldString.lastIndexOf(':');
+
+        if (colonCharIndex != -1) {
+            worldString = worldString.substring(colonCharIndex + 1, worldString.length() - 1);
+        }
+        return worldString;
+
+    }
+
+    @Override
+    public String toString(){
+
+        return String.format("[%s] %s %s %s-side text of a sign at %s in %s",
+                DTF.format(this.timestamp()),
+                this.author().getDisplayName().getString(),
+                this.isApplying ? "applied the glow effect to the" : "removed the glow effect from the",
+                this.isFrontSide() ? "front" : "back",
+                SignEditEvent.getBlockPosAsLogString(this.blockPos),
+                this.getWorldRegistryKeyAsString());
+    }
+}

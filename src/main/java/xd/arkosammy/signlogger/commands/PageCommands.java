@@ -10,7 +10,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xd.arkosammy.signlogger.events.IInspectionModeAccess;
+import xd.arkosammy.signlogger.util.ducks.IInspectionModeAccess;
 
 public abstract class PageCommands {
 

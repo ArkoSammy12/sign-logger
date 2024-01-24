@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xd.arkosammy.signlogger.events.callbacks.BlockBreakStartCallback;
 
 @Mixin(targets = "net.minecraft.block.AbstractBlock$AbstractBlockState")
-public abstract class BlockBreakStartMixin {
+public abstract class AbstractBlockStateMixin {
 
     @Shadow protected abstract BlockState asBlockState();
 
