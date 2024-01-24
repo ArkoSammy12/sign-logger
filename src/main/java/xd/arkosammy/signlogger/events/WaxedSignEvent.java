@@ -4,7 +4,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import xd.arkosammy.signlogger.util.DatabaseTables;
 import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;

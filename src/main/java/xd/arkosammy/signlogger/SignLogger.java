@@ -1,11 +1,6 @@
 package xd.arkosammy.signlogger;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xd.arkosammy.signlogger.configuration.SignLoggerConfig;
