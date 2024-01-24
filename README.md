@@ -12,9 +12,9 @@ Inspection mode will be automatically disabled upon dying or leaving the server.
 ### Sign-edit logging
 
 There are currently four types of sign edit events that get stored, all of which include information about the author, the position, the world, and the time at which this event happened. These are:
-- **Changed Text event**: Corresponds to when a player changes the text of a sign to another. Includes information about the old and new text of the sign, as well as the side of the sign where the text edition happened.
+- **Changed Text event**: Corresponds to when a player changes the text of a sign to another. Includes information about the old and new text of the sign, as well as the side of the sign where the text edition happened. Hover your cursor over the sign side section of the log to see the before and after the of the edited text.
 - **Waxed Sign event**: Corresponds to when a player waxes a sign, preventing it from being edited further.
-- **Dyed Sign event**: Corresponds to when a player changes the color of the text of a sign by applying a dye. Includes information about the old and new color of the text, and the side of the sign where the color change happened.
+- **Dyed Sign event**: Corresponds to when a player changes the color of the text of a sign by applying a dye. Includes information about the old and new color of the text, and the side of the sign where the color change happened. Hover your cursor over the sign side section of the log to see the before and after of the color of the text.
 - **Glowed Sign event**: Corresponds to when a player applies or removes the glow effect from the text of a sign, by using a glow ink sac or an ink sac, respectively. Includes information about the side of the sign where this action was performed.
 
 You can also toggle the logging of sign-edits in the console via `/sign-logger settings do_console_logs true|false`.
