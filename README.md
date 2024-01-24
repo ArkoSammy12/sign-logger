@@ -1,5 +1,5 @@
 # Sign Logger
-This simple server side mod allows for the tracking of sign editions in the world. It can log these events to the server's console, as well as store them to a database. The mod features an inspection mode to quickly see the sign=edit logs associated with a specific coordinate.
+This server side mod allows for the tracking of sign editions in the world. It can log these events to the server's console, as well as store them to a database. The mod features an inspection mode to quickly see the sign=edit logs associated with a specific coordinate.
 
 ## Features
 
@@ -11,18 +11,18 @@ Inspection mode will be automatically disabled upon dying or leaving the server.
 
 ### Sign-edit logging
 
-Whenever a player successfully edits the text of any sign, this event will be logged to the console and stored for future querying. This information includes:
-- The player who edited the sign.
-- The date of the editing.
-- Whether the text edited was on the front or back side of the sign.
-- The coordinates and the world where the sign was edited.
-- The text before and after the edition was made.
+There are currently four types of sign edit events that get stored, all of which include information about the author, the position, the world, and the time at which this event happened. These are:
+- **Changed Text event**: Corresponds to when a player changes the text of a sign to another. Includes information about the old and new text of the sign, as well as the side of the sign where the text edition happened.
+- **Waxed Sign event**: Corresponds to when a player waxes a sign, preventing it from being edited further.
+- **Dyed Sign event**: Corresponds to when a player changes the color of the text of a sign by applying a dye. Includes information about the old and new color of the text, and the side of the sign where the color change happened.
+- **Glowed Sign event**: Corresponds to when a player applies or removes the glow effect from the text of a sign, by using a glow ink sac or an ink sac, respectively. Includes information about the side of the sign where this action was performed.
 
 You can also toggle the logging of sign-edits in the console via `/sign-logger settings do_console_logs true|false`.
 
 ### Database
 
 The sign-edit logs get stored in a simple database. You can configure the time in days that will be used to purge logs older than the time specified via `/sign-logger database purge`. You can specify the amount of days with `/sign-logger database purge_older_than_x_days <whole number value>`.
+The database will also be automatically purged upon server shutdown, using the `purge_logs_older_than_x_amount` value specified in the configuration file.
 
 ## Configuration  File
 
@@ -31,12 +31,12 @@ When the server is started, the mod will look for an existing `sign-logger.toml`
 The following is the default configuration file generated upon first mod initialization or whenever the mod fails to find the config file during server or world shutdown.
 
 ```toml
-#Settings related to the behaviour of the database.
+#Settings related to the behavior of the database.
 [database]
 	#(Default = 30) Configure the time in days that will be used to purge log entries older than the time specified.
 	#Cannot be set to a value lower than 1 or a decimal value.
 	purge_logs_older_than_x_amount = 1
-#Toggleable settings to customize the behaviour of the mod.
+#Toggleable settings to customize the behavior of the mod.
 [settings]
 	#(Default = true) Toggle the logging of sign edit instances in the console.
 	do_console_logging = true
