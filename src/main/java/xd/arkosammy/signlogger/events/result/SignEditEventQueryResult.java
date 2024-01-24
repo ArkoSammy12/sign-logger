@@ -13,6 +13,8 @@ public interface SignEditEventQueryResult {
 
     String getBlockPos();
 
+    String getWorldRegistryKey();
+
      static String formatElapsedTime(Duration duration) {
         long days = duration.toDays();
         long hours = duration.toHours() % 24;

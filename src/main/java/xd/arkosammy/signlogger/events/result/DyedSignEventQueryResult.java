@@ -29,6 +29,11 @@ public record DyedSignEventQueryResult(String author,
     }
 
     @Override
+    public String getWorldRegistryKey(){
+        return this.worldRegistryKey;
+    }
+
+    @Override
     public MutableText getQueryResultText() {
 
         String author = this.author();

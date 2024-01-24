@@ -29,6 +29,11 @@ public record GlowedSignEventQueryResult(String author,
     }
 
     @Override
+    public String getWorldRegistryKey(){
+        return this.worldRegistryKey;
+    }
+
+    @Override
     public MutableText getQueryResultText() {
 
         String author = this.author();
