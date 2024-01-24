@@ -31,7 +31,6 @@ public abstract class GlowInkSacItem {
         MinecraftServer server = world.getServer();
         GlowedSignEvent waxedSignEvent = new GlowedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, true, now, front);
         SignEditCallback.EVENT.invoker().onSignEditedCallback(waxedSignEvent, server);
-
     }
 
 }

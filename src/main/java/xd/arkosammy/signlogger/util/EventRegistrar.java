@@ -15,7 +15,7 @@ import xd.arkosammy.signlogger.commands.SignLoggerCommandManager;
 import xd.arkosammy.signlogger.configuration.DatabaseConfig;
 import xd.arkosammy.signlogger.configuration.SettingsConfig;
 import xd.arkosammy.signlogger.events.callbacks.BlockBreakStartCallback;
-import xd.arkosammy.signlogger.events.callbacks.BlockPlacedCallback;
+import xd.arkosammy.signlogger.events.callbacks.AttemptedBlockPlaceCallback;
 import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
 import xd.arkosammy.signlogger.util.ducks.IInspectionModeAccess;
 
@@ -87,7 +87,7 @@ public abstract class EventRegistrar {
     }
 
     private static void registerBlockPlacedCallback() {
-        BlockPlacedCallback.EVENT.register((context) -> {
+        AttemptedBlockPlaceCallback.EVENT.register((context) -> {
             if (context.getPlayer() instanceof ServerPlayerEntity serverPlayerEntity && ((IInspectionModeAccess) serverPlayerEntity).sign_logger$isInspecting()) {
                 return ActionResult.FAIL;
             }

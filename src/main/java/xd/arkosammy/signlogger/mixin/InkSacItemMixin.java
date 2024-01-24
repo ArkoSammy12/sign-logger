@@ -31,7 +31,6 @@ public abstract class InkSacItemMixin {
         MinecraftServer server = world.getServer();
         GlowedSignEvent waxedSignEvent = new GlowedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, false, now, front);
         SignEditCallback.EVENT.invoker().onSignEditedCallback(waxedSignEvent, server);
-
     }
 
 }

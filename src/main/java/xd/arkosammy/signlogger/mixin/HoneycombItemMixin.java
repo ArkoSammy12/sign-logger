@@ -31,7 +31,6 @@ public abstract class HoneycombItemMixin {
         MinecraftServer server = world.getServer();
         WaxedSignEvent waxedSignEvent = new WaxedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, now, front);
         SignEditCallback.EVENT.invoker().onSignEditedCallback(waxedSignEvent, server);
-
     }
 
 }

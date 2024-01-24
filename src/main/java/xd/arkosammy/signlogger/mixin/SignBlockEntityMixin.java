@@ -53,7 +53,6 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 		}
 		ChangedTextSignEvent changedTextSignEvent = new ChangedTextSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, originalText, newText, now, front);
 		SignEditCallback.EVENT.invoker().onSignEditedCallback(changedTextSignEvent, server);
-
 	}
 
 }

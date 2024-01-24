@@ -45,7 +45,6 @@ public abstract class DyeItemMixin {
         MinecraftServer server = world.getServer();
         DyedSignEvent dyedSignEvent = new DyedSignEvent(serverPlayerEntity, blockPos, worldRegistryKey, oldColorName, newColorName, now, front);
         SignEditCallback.EVENT.invoker().onSignEditedCallback(dyedSignEvent, server);
-
     }
 
 }

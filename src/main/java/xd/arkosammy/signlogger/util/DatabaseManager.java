@@ -108,7 +108,7 @@ public abstract class DatabaseManager {
 
     public static List<SignEditEventQueryResult> queryFromAllTables(BlockPos queryPos, RegistryKey<World> queryWorld, MinecraftServer server){
 
-        EnumSet<DatabaseTables> allTables = EnumSet.of(DatabaseTables.CHANGED_TEXT_EVENTS, DatabaseTables.WAXED_SIGN_EVENTS, DatabaseTables.DYED_SIGN_EVENTS, DatabaseTables.GLOWED_SIGN_EVENTS);
+        EnumSet<DatabaseTables> allTables = EnumSet.allOf(DatabaseTables.class);
         return queryFromTables(queryPos, queryWorld, server, allTables);
 
     }
@@ -142,18 +142,14 @@ public abstract class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            SignLogger.LOGGER.error("Error querying from sign-logger database " + e);
         }
-
         return signEditEventQueryResults;
-
     }
 
     public static int purgeOldEntries(int daysThreshold, MinecraftServer server) {
-
         String url = "jdbc:sqlite:" + server.getSavePath(WorldSavePath.ROOT).resolve("sign-logger.db");
         int totalDeletedRows = 0;
-
         try (Connection connection = DriverManager.getConnection(url)) {
             for(DatabaseTables signEditEvent : DatabaseTables.values()){
                 totalDeletedRows += purgeTable(connection, signEditEvent.getTableName(), daysThreshold);
@@ -161,13 +157,11 @@ public abstract class DatabaseManager {
         } catch (SQLException e) {
             SignLogger.LOGGER.error("Error attempting to purge databases: " + e);
         }
-
         return totalDeletedRows;
     }
 
     private static int purgeTable(Connection connection, String tableName, int daysThreshold) throws SQLException {
         int deletedRows = 0;
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "DELETE FROM " + tableName + " WHERE timestamp < ?")) {
 
@@ -179,7 +173,6 @@ public abstract class DatabaseManager {
         } catch (SQLException e) {
             SignLogger.LOGGER.error("Error attempting to purge " + tableName + " table: " + e);
         }
-
         return deletedRows;
     }
 

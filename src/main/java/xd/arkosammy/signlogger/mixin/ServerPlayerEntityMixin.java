@@ -65,6 +65,7 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
 
     @Unique
     public void sign_logger$inspect(BlockPos blockPos, ServerWorld world){
+
         List<SignEditEventQueryResult> signEditEventQueryResults = DatabaseManager.queryFromAllTables(blockPos, world.getRegistryKey(), world.getServer());
         if(signEditEventQueryResults.isEmpty()){
             this.sendMessage(Text.literal("No logs found for this coordinate").formatted(Formatting.RED));
