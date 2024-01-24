@@ -9,7 +9,13 @@ import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public record ChangedTextSignEvent(ServerPlayerEntity author, BlockPos blockPos, RegistryKey<World> worldRegistryKey, SignEditText originalText, SignEditText newText, LocalDateTime timestamp, boolean isFrontSide) implements SignEditEvent {
+public record ChangedTextSignEvent(ServerPlayerEntity author,
+                                   BlockPos blockPos,
+                                   RegistryKey<World> worldRegistryKey,
+                                   SignEditText originalText,
+                                   SignEditText newText,
+                                   LocalDateTime timestamp,
+                                   boolean isFrontSide) implements SignEditEvent {
 
     @Override
     public ServerPlayerEntity getAuthor() {
@@ -29,11 +35,6 @@ public record ChangedTextSignEvent(ServerPlayerEntity author, BlockPos blockPos,
     @Override
     public LocalDateTime getTimestamp() {
         return this.timestamp;
-    }
-
-    @Override
-    public String getEventType(){
-        return SignEditEvents.CHANGED_TEXT.getEventTypeString();
     }
 
     @Override

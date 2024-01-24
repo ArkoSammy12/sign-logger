@@ -14,10 +14,10 @@ import xd.arkosammy.signlogger.SignLogger;
 import xd.arkosammy.signlogger.commands.SignLoggerCommandManager;
 import xd.arkosammy.signlogger.configuration.DatabaseConfig;
 import xd.arkosammy.signlogger.configuration.SettingsConfig;
-import xd.arkosammy.signlogger.events.IInspectionModeAccess;
 import xd.arkosammy.signlogger.events.callbacks.BlockBreakStartCallback;
 import xd.arkosammy.signlogger.events.callbacks.BlockPlacedCallback;
 import xd.arkosammy.signlogger.events.callbacks.SignEditCallback;
+import xd.arkosammy.signlogger.util.ducks.IInspectionModeAccess;
 
 public abstract class EventRegistrar {
 

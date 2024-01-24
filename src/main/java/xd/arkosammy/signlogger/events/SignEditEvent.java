@@ -23,8 +23,6 @@ public interface SignEditEvent {
 
     boolean isFrontSide();
 
-    String getEventType();
-
     String getLogString();
 
     void accept(SignEditEventVisitor signEditEventVisitor);

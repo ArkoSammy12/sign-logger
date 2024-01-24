@@ -12,11 +12,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xd.arkosammy.signlogger.events.*;
+import xd.arkosammy.signlogger.events.result.SignEditEventQueryResult;
 import xd.arkosammy.signlogger.util.DatabaseManager;
+import xd.arkosammy.signlogger.util.ducks.IInspectionModeAccess;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Mixin(ServerPlayerEntity.class)
@@ -28,7 +27,7 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
     private boolean isInspecting = false;
 
     @Unique
-    private final List<List<SignEditEventResult>> cachedSignEditResults = new ArrayList<>();
+    private final List<List<SignEditEventQueryResult>> cachedSignEditResults = new ArrayList<>();
 
     @Unique
     private int pageIndex = 0;
@@ -39,7 +38,7 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
     }
 
     @Unique
-    public List<List<SignEditEventResult>> sign_logger$getCachedSignEditResults(){
+    public List<List<SignEditEventQueryResult>> sign_logger$getCachedSignEditResults(){
         return this.cachedSignEditResults;
     }
 
@@ -66,28 +65,23 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
 
     @Unique
     public void sign_logger$inspect(BlockPos blockPos, ServerWorld world){
-        Optional<List<SignEditEventResult>> signEditEventResultListOptional = DatabaseManager.queryFromBlockPos(blockPos, world.getServer(), world.getRegistryKey());
-        if(signEditEventResultListOptional.isEmpty()){
-            this.sendMessage(Text.literal("No logs found for this coordinate").formatted(Formatting.RED));
-            return;
-        }
-        List<SignEditEventResult> signEditEventResults = signEditEventResultListOptional.get();
-        if(signEditEventResults.isEmpty()){
+        List<SignEditEventQueryResult> signEditEventQueryResults = DatabaseManager.queryFromAllTables(blockPos, world.getRegistryKey(), world.getServer());
+        if(signEditEventQueryResults.isEmpty()){
             this.sendMessage(Text.literal("No logs found for this coordinate").formatted(Formatting.RED));
             return;
         }
 
-        signEditEventResults.sort(Comparator.comparing(SignEditEventResult::timestamp).reversed());
+        signEditEventQueryResults.sort(Comparator.comparing(SignEditEventQueryResult::getTimestamp).reversed());
         cachedSignEditResults.clear();
         pageIndex = 0;
 
         // Paginate sign edit logs
-        for (int i = 0; i < signEditEventResults.size(); i++) {
+        for (int i = 0; i < signEditEventQueryResults.size(); i++) {
             if (i % 10 == 0) {
-                List<SignEditEventResult> page = new ArrayList<>();
+                List<SignEditEventQueryResult> page = new ArrayList<>();
                 cachedSignEditResults.add(page);
             }
-            cachedSignEditResults.get(cachedSignEditResults.size() - 1).add(signEditEventResults.get(i));
+            cachedSignEditResults.get(cachedSignEditResults.size() - 1).add(signEditEventQueryResults.get(i));
         }
 
         this.sign_logger$showPage();
@@ -97,46 +91,17 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
     @Unique
     public void sign_logger$showPage(){
 
-        String blockPosHeader = this.cachedSignEditResults.get(0).get(0).blockPos();
+        String blockPosHeader = this.cachedSignEditResults.get(0).get(0).getBlockPos();
         MutableText headerText = Text.literal(String.format("-- Searching sign logs at %s --", blockPosHeader))
                 .formatted(Formatting.GREEN);
         this.sendMessage(headerText);
         MutableText logLines = Text.literal("");
-        Iterator<SignEditEventResult> signEditEventResultIterator = this.cachedSignEditResults.get(pageIndex).iterator();
+        Iterator<SignEditEventQueryResult> signEditEventResultIterator = this.cachedSignEditResults.get(pageIndex).iterator();
 
         while(signEditEventResultIterator.hasNext()){
 
-            SignEditEventResult signEditEventResult = signEditEventResultIterator.next();
-
-            String author = signEditEventResult.author();
-            String pos = signEditEventResult.blockPos();
-            String worldRegistryKey = signEditEventResult.getWorldRegistryKeyForDisplay();
-            SignEditText originalText = signEditEventResult.originalText();
-            SignEditText newText = signEditEventResult.newText();
-            LocalDateTime localDateTime = signEditEventResult.timestamp();
-            boolean isFrontSide = signEditEventResult.isFrontSide();
-            Duration timeSinceLog = Duration.between(localDateTime, LocalDateTime.now());
-
-            MutableText durationText = Text.literal(formatElapsedTime(timeSinceLog) + " ")
-                    .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(localDateTime.format(SignEditEvent.DTF)))))
-                    .formatted(Formatting.GRAY);
-            MutableText authorText = Text.literal(author + " ")
-                    .formatted(Formatting.BLUE);
-            MutableText editedSignText = Text.literal("edited the ")
-                    .formatted(Formatting.GRAY);
-            MutableText sideText = Text.literal((isFrontSide ? "front" : "back") + "-side text ")
-                    .setStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("From " + originalText.toString() + " to " + newText.toString()))))
-                    .formatted(Formatting.BLUE);
-            MutableText middleText = Text.literal("of a sign at ")
-                    .formatted(Formatting.GRAY);
-            MutableText positionText = Text.literal(pos + " ")
-                    .formatted(Formatting.BLUE);
-            MutableText preWorldText = Text.literal("in ")
-                    .formatted(Formatting.GRAY);
-            MutableText worldText = Text.literal(worldRegistryKey)
-                    .formatted(Formatting.BLUE);
-
-            MutableText logLineText = Text.empty().append(durationText).append(authorText).append(editedSignText).append(sideText).append(middleText).append(positionText).append(preWorldText).append(worldText);
+            SignEditEventQueryResult signEditEventQueryResult = signEditEventResultIterator.next();
+            MutableText logLineText  = signEditEventQueryResult.getQueryResultText();
             logLines.append((signEditEventResultIterator.hasNext() ? logLineText.append("\n") : logLineText));
 
         }
@@ -161,23 +126,5 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
 
     }
 
-    @Unique
-    private static String formatElapsedTime(Duration duration) {
-        long days = duration.toDays();
-        long hours = duration.toHours() % 24;
-        long minutes = duration.toMinutes() % 60;
-        long seconds = duration.toSeconds() % 60;
-        String result = seconds + "s ago";
-        if (minutes > 0) {
-            result = minutes + "m ago";
-        }
-        if (hours > 0) {
-            result = hours + "h ago";
-        }
-        if (days > 0) {
-            result = days + "d ago";
-        }
-        return result;
-    }
 
 }

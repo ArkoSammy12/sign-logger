@@ -8,7 +8,13 @@ import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;
 
-public record DyedSignEvent(ServerPlayerEntity author, BlockPos blockPos, RegistryKey<World> worldRegistryKey, String oldColorName, String newColorName, LocalDateTime timestamp, boolean isFrontSide) implements SignEditEvent {
+public record DyedSignEvent(ServerPlayerEntity author,
+                            BlockPos blockPos,
+                            RegistryKey<World> worldRegistryKey,
+                            String oldColorName,
+                            String newColorName,
+                            LocalDateTime timestamp,
+                            boolean isFrontSide) implements SignEditEvent {
 
     @Override
     public ServerPlayerEntity getAuthor() {
@@ -36,11 +42,6 @@ public record DyedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regist
     }
 
     @Override
-    public String getEventType() {
-        return SignEditEvents.DYED_SIGN.getEventTypeString();
-    }
-
-    @Override
     public String getLogString() {
         return this.toString();
     }
@@ -65,7 +66,7 @@ public record DyedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regist
     @Override
     public String toString() {
 
-        return String.format("[%s] %s changed the color of the %s-side of a sign at %s in %s, from %s to %s",
+        return String.format("[%s] %s changed the color of the %s-side text of a sign at %s in %s, from %s to %s",
                 DTF.format(this.timestamp()),
                 this.author().getDisplayName().getString(),
                 this.isFrontSide() ? "front" : "back",

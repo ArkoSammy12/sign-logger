@@ -4,11 +4,16 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import xd.arkosammy.signlogger.util.DatabaseTables;
 import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;
 
-public record WaxedSignEvent(ServerPlayerEntity author, BlockPos blockPos, RegistryKey<World> worldRegistryKey, LocalDateTime timestamp, boolean isFrontSide) implements SignEditEvent {
+public record WaxedSignEvent(ServerPlayerEntity author,
+                             BlockPos blockPos,
+                             RegistryKey<World> worldRegistryKey,
+                             LocalDateTime timestamp,
+                             boolean isFrontSide) implements SignEditEvent {
     @Override
     public ServerPlayerEntity getAuthor() {
         return this.author;
@@ -32,11 +37,6 @@ public record WaxedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regis
     @Override
     public boolean isFrontSide() {
         return this.isFrontSide;
-    }
-
-    @Override
-    public String getEventType() {
-        return SignEditEvents.WAXED_SIGN.getEventTypeString();
     }
 
     @Override

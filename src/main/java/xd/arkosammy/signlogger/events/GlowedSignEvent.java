@@ -8,7 +8,12 @@ import xd.arkosammy.signlogger.util.visitors.SignEditEventVisitor;
 
 import java.time.LocalDateTime;
 
-public record GlowedSignEvent(ServerPlayerEntity author, BlockPos blockPos, RegistryKey<World> worldRegistryKey, boolean isApplying, LocalDateTime timestamp, boolean isFrontSide) implements SignEditEvent {
+public record GlowedSignEvent(ServerPlayerEntity author,
+                              BlockPos blockPos,
+                              RegistryKey<World> worldRegistryKey,
+                              boolean isApplying,
+                              LocalDateTime timestamp,
+                              boolean isFrontSide) implements SignEditEvent {
 
     @Override
     public ServerPlayerEntity getAuthor() {
@@ -36,11 +41,6 @@ public record GlowedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regi
     }
 
     @Override
-    public String getEventType() {
-        return SignEditEvents.GLOWED_SIGN.getEventTypeString();
-    }
-
-    @Override
     public String getLogString() {
         return this.toString();
     }
@@ -65,7 +65,7 @@ public record GlowedSignEvent(ServerPlayerEntity author, BlockPos blockPos, Regi
     @Override
     public String toString(){
 
-        return String.format("[%s] %s %s %s-side of a sign at %s in %s",
+        return String.format("[%s] %s %s %s-side text of a sign at %s in %s",
                 DTF.format(this.timestamp()),
                 this.author().getDisplayName().getString(),
                 this.isApplying ? "applied the glow effect to the" : "removed the glow effect from the",

@@ -1,6 +1,7 @@
 package xd.arkosammy.signlogger.util.visitors;
 
 import xd.arkosammy.signlogger.events.*;
+import xd.arkosammy.signlogger.util.DatabaseTables;
 
 import java.sql.*;
 
@@ -15,7 +16,7 @@ public class SignEditEventDatabaseVisitor implements SignEditEventVisitor {
     @Override
     public void visit(ChangedTextSignEvent changedTextSignEvent) {
         try (PreparedStatement preparedStatement = databaseConnection.prepareStatement(
-                "INSERT INTO sign_edit_events (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) " +
+                "INSERT INTO %s (author_name, block_pos, world_registry_key, original_text_line_1, original_text_line_2, original_text_line_3, original_text_line_4, new_text_line_1, new_text_line_2, new_text_line_3, new_text_line_4, timestamp, is_front_side) ".formatted(DatabaseTables.CHANGED_TEXT_EVENTS.getTableName()) +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, changedTextSignEvent.author().getDisplayName().getString());
@@ -44,7 +45,7 @@ public class SignEditEventDatabaseVisitor implements SignEditEventVisitor {
     public void visit(WaxedSignEvent waxedSignEvent) {
 
         try(PreparedStatement preparedStatement = databaseConnection.prepareStatement(
-                "INSERT INTO waxed_sign_events (author_name, block_pos, world_registry_key, timestamp) " +
+                "INSERT INTO %s (author_name, block_pos, world_registry_key, timestamp) ".formatted(DatabaseTables.WAXED_SIGN_EVENTS.getTableName()) +
                 "VALUES (?, ?, ?, ?)")){
 
             preparedStatement.setString(1, waxedSignEvent.getAuthor().getDisplayName().getString());
@@ -64,7 +65,7 @@ public class SignEditEventDatabaseVisitor implements SignEditEventVisitor {
     public void visit(DyedSignEvent dyedSignEvent) {
 
         try(PreparedStatement preparedStatement = databaseConnection.prepareStatement(
-                "INSERT INTO dyed_sign_events (author_name, block_pos, world_registry_key, old_color, new_color, timestamp, is_front_side) " +
+                "INSERT INTO %s (author_name, block_pos, world_registry_key, old_color, new_color, timestamp, is_front_side) ".formatted(DatabaseTables.DYED_SIGN_EVENTS.getTableName()) +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, dyedSignEvent.getAuthor().getDisplayName().getString());
@@ -87,7 +88,7 @@ public class SignEditEventDatabaseVisitor implements SignEditEventVisitor {
     public void visit(GlowedSignEvent glowedSignEvent) {
 
         try(PreparedStatement preparedStatement = databaseConnection.prepareStatement(
-                "INSERT INTO glowed_sign_events (author_name, block_pos, world_registry_key, is_applying, timestamp, is_front_side)  " +
+                "INSERT INTO %s (author_name, block_pos, world_registry_key, is_applying, timestamp, is_front_side) ".formatted(DatabaseTables.GLOWED_SIGN_EVENTS.getTableName()) +
                         "VALUES (?, ?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, glowedSignEvent.getAuthor().getDisplayName().getString());
