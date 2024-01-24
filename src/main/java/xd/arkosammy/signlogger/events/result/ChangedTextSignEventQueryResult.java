@@ -39,7 +39,7 @@ public record ChangedTextSignEventQueryResult(String author,
 
         String author = this.author();
         String pos = this.blockPos();
-        String worldRegistryKey = this.getWorldRegistryKeyForDisplay();
+        String worldRegistryKey = this.getWorldRegistryKeyIdentifier();
         SignEditText originalText = this.originalText();
         SignEditText newText = this.newText();
         LocalDateTime localDateTime = this.timestamp();
@@ -70,7 +70,7 @@ public record ChangedTextSignEventQueryResult(String author,
 
     }
 
-    private String getWorldRegistryKeyForDisplay() {
+    private String getWorldRegistryKeyIdentifier() {
 
         String worldName = this.worldRegistryKey;
         int colonCharIndex = worldRegistryKey.lastIndexOf(':');

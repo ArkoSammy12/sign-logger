@@ -38,7 +38,7 @@ public record GlowedSignEventQueryResult(String author,
 
         String author = this.author();
         String pos = this.blockPos();
-        String worldRegistryKey = this.getWorldRegistryKeyForDisplay();
+        String worldRegistryKey = this.getWorldRegistryKeyIdentifier();
         boolean isApplying = this.isApplying();
         LocalDateTime localDateTime = this.timestamp();
         boolean isFrontSide = this.isFrontSide();
@@ -66,7 +66,7 @@ public record GlowedSignEventQueryResult(String author,
         return logLineText;
     }
 
-    private String getWorldRegistryKeyForDisplay() {
+    private String getWorldRegistryKeyIdentifier() {
 
         String worldName = this.worldRegistryKey;
         int colonCharIndex = worldRegistryKey.lastIndexOf(':');

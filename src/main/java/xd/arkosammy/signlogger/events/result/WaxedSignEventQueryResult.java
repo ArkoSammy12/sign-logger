@@ -35,7 +35,7 @@ public record WaxedSignEventQueryResult(String author,
 
         String author = this.author();
         String pos = this.blockPos();
-        String worldRegistryKey = this.getWorldRegistryKeyForDisplay();
+        String worldRegistryKey = this.getWorldRegistryKeyIdentifier();
         LocalDateTime localDateTime = this.timestamp();
         Duration timeSinceLog = Duration.between(localDateTime, LocalDateTime.now());
 
@@ -57,7 +57,7 @@ public record WaxedSignEventQueryResult(String author,
         return logLineText;
     }
 
-    private String getWorldRegistryKeyForDisplay() {
+    private String getWorldRegistryKeyIdentifier() {
 
         String worldName = this.worldRegistryKey;
         int colonCharIndex = worldRegistryKey.lastIndexOf(':');

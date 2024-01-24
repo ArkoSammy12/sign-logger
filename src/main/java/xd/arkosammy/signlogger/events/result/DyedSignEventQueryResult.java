@@ -38,7 +38,7 @@ public record DyedSignEventQueryResult(String author,
 
         String author = this.author();
         String pos = this.blockPos();
-        String worldRegistryKey = this.getWorldRegistryKeyForDisplay();
+        String worldRegistryKey = this.getWorldRegistryKeyIdentifier();
         String oldColorName = this.oldColorName;
         String newColorName = this.newColorName;
         LocalDateTime localDateTime = this.timestamp();
@@ -68,7 +68,7 @@ public record DyedSignEventQueryResult(String author,
         return logLineText;
     }
 
-    private String getWorldRegistryKeyForDisplay() {
+    private String getWorldRegistryKeyIdentifier() {
 
         String worldName = this.worldRegistryKey;
         int colonCharIndex = worldRegistryKey.lastIndexOf(':');
