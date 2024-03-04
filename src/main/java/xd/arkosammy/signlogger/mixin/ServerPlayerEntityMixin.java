@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xd.arkosammy.signlogger.events.SignEditEvent;
 import xd.arkosammy.signlogger.events.result.SignEditEventQueryResult;
 import xd.arkosammy.signlogger.util.DatabaseManager;
 import xd.arkosammy.signlogger.util.ducks.IInspectionModeAccess;
@@ -92,7 +93,7 @@ public abstract class ServerPlayerEntityMixin implements IInspectionModeAccess {
     @Unique
     public void sign_logger$showPage(){
 
-        String blockPosHeader = this.cachedSignEditResults.get(0).get(0).getBlockPos();
+        String blockPosHeader = SignEditEvent.getBlockPosAsLogString(this.cachedSignEditResults.get(0).get(0).getBlockPos());
         MutableText headerText = Text.literal(String.format("-- Searching sign logs at %s --", blockPosHeader))
                 .formatted(Formatting.GREEN);
         this.sendMessage(headerText);

@@ -1,19 +1,22 @@
 package xd.arkosammy.signlogger.events.result;
 
 
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import xd.arkosammy.signlogger.events.SignEditEvent;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public record GlowedSignEventQueryResult(String author,
-                                         String blockPos,
-                                         String worldRegistryKey,
+                                         String blockPosLogString,
+                                         String worldResourceKey,
                                          boolean isApplying,
                                          LocalDateTime timestamp,
                                          boolean isFrontSide) implements SignEditEventQueryResult {
@@ -24,21 +27,20 @@ public record GlowedSignEventQueryResult(String author,
     }
 
     @Override
-    public String getBlockPos() {
-        return this.blockPos;
+    public BlockPos getBlockPos() {
+        return SignEditEventQueryResult.fromBlockPosLogString(this.blockPosLogString);
     }
 
     @Override
-    public String getWorldRegistryKey(){
-        return this.worldRegistryKey;
+    public RegistryKey<World> getWorldRegistryKey(){
+        return SignEditEventQueryResult.fromResourceKeyString(this.worldResourceKey);
     }
-
     @Override
     public MutableText getQueryResultText() {
 
         String author = this.author();
-        String pos = this.blockPos();
-        String worldRegistryKey = this.getWorldRegistryKeyIdentifier();
+        String pos = this.blockPosLogString();
+        String worldRegistryKey = this.getWorldRegistryKey().getValue().toString();
         boolean isApplying = this.isApplying();
         LocalDateTime localDateTime = this.timestamp();
         boolean isFrontSide = this.isFrontSide();
@@ -64,17 +66,6 @@ public record GlowedSignEventQueryResult(String author,
 
         MutableText logLineText = Text.empty().append(durationText).append(authorText).append(editedSignText).append(sideText).append(middleText).append(positionText).append(preWorldText).append(worldText);
         return logLineText;
-    }
-
-    private String getWorldRegistryKeyIdentifier() {
-
-        String worldName = this.worldRegistryKey;
-        int colonCharIndex = worldRegistryKey.lastIndexOf(':');
-        if (colonCharIndex != -1) {
-            worldName = worldRegistryKey.substring(colonCharIndex + 1, worldRegistryKey.length() - 1);
-        }
-        return worldName;
-
     }
 
 }

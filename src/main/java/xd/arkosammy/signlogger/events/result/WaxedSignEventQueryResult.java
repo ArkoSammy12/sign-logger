@@ -1,18 +1,21 @@
 package xd.arkosammy.signlogger.events.result;
 
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import xd.arkosammy.signlogger.events.SignEditEvent;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public record WaxedSignEventQueryResult(String author,
-                                        String blockPos,
-                                        String worldRegistryKey,
+                                        String blockPosString,
+                                        String worldResourceKey,
                                         LocalDateTime timestamp) implements SignEditEventQueryResult {
 
     @Override
@@ -21,21 +24,21 @@ public record WaxedSignEventQueryResult(String author,
     }
 
     @Override
-    public String getBlockPos() {
-        return this.blockPos;
+    public BlockPos getBlockPos() {
+        return SignEditEventQueryResult.fromBlockPosLogString(this.blockPosString);
     }
 
     @Override
-    public String getWorldRegistryKey(){
-        return this.worldRegistryKey;
+    public RegistryKey<World> getWorldRegistryKey(){
+        return SignEditEventQueryResult.fromResourceKeyString(this.worldResourceKey);
     }
 
     @Override
     public MutableText getQueryResultText() {
 
         String author = this.author();
-        String pos = this.blockPos();
-        String worldRegistryKey = this.getWorldRegistryKeyIdentifier();
+        String pos = this.blockPosString();
+        String worldRegistryKey = this.getWorldRegistryKey().getValue().toString();
         LocalDateTime localDateTime = this.timestamp();
         Duration timeSinceLog = Duration.between(localDateTime, LocalDateTime.now());
 
@@ -55,17 +58,6 @@ public record WaxedSignEventQueryResult(String author,
 
         MutableText logLineText = Text.empty().append(durationText).append(authorText).append(editedSignText).append(positionText).append(preWorldText).append(worldText);
         return logLineText;
-    }
-
-    private String getWorldRegistryKeyIdentifier() {
-
-        String worldName = this.worldRegistryKey;
-        int colonCharIndex = worldRegistryKey.lastIndexOf(':');
-        if (colonCharIndex != -1) {
-            worldName = worldRegistryKey.substring(colonCharIndex + 1, worldRegistryKey.length() - 1);
-        }
-        return worldName;
-
     }
 
 }
